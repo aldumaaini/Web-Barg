@@ -1,5 +1,5 @@
 {
-  "name": "aptive-react",
+  "name": "Web-Barg",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,7 +10,7 @@
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
     "react-router-dom": "^6.0.2",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^4.0.3",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
