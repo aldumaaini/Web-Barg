@@ -8,10 +8,14 @@ const Hero = () => {
             <div className='container'>
                 <div className='content'>
                     <div className='col-1'>
-                        <h1>Data to enrich your</h1>
-                        <h1><span className='primary-color'>online business</span></h1>
+                        <h1> WHATASAPP BARG </h1>
+                        <h2><span className='warning-color'>Your best choice in faster reach </span></h2>
                         <p>
-                            Lorem ipsum dolor sit amet, consec tetur adipisicing elit.
+                            Lorem 
+                            
+                            
+                            
+                              dolor sit amet, consec tetur adipisicing elit.
                             Architecto iure fuga deleniti sit! Cum doloribus, nesciunt
                             laboriosam eos praesentium veritatis!
                         </p>
@@ -28,16 +32,13 @@ const Hero = () => {
                         <div className='form-layout'>
                             <div className='form-container'>
                                 <p className='sign-in-txt'>Sign in with</p>
-                                <div className='social-login'>
-                                    <i><FaFacebook size={20} /></i>
-                                    <i><FaTwitter size={20} /></i>
-                                    <i><FaGithub size={20} /></i>
-                                </div>
+
                                 <div className='divider'>
                                     <p><span>Or</span></p>
                                 </div>
                                 <form action=''>
                                     <input type='text' placeholder='Name' />
+                                    <input type='text' placeholder='Email Address' />
                                     <input type='email' placeholder='Email' />
                                     <input type='password' placeholder='Password' />
                                     <button>Create your account</button>

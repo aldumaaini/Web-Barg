@@ -1,7 +1,11 @@
 .hero {
     width: 100%;
     height: 100vh;
-    background-color: var(--darkgrey);
+    background-color: #079186f5;
+    background-image: url(../assest/bg-pattern.png);
+    background-size: cover;
+    background-position: bottom;
+    opacity: 90;
 }
 
 .hero .container {
@@ -31,7 +35,7 @@
 
 .hero .col-1 p {
     font-size: 1rem;
-    color: var(--grey);
+    color: var(--black);
     line-height: 1.4;
     margin-top: 1.2rem;
 }
@@ -43,7 +47,7 @@
 }
 
 .hero .col-1 .icons i {
-    color: var(--grey);
+    color: var(--black);
     padding-right: 1rem;
 }
 
@@ -143,7 +147,12 @@ form input {
 
     .hero h1 {
        font-size: 32px;
+   
+       
     }
+
+
+ 
 
     .hero .col-2 {
         display: none;
