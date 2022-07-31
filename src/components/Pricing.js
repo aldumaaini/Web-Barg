@@ -1,4 +1,5 @@
 import React from 'react'
+import { PricingTable, PricingSlot, PricingDetail } from 'react-pricing-table'
 
 
 import './PricingStyles.css'
@@ -13,51 +14,27 @@ const Pricing = () => {
                         <p>Includes every feature we offer plus unlimited projects and unlimited users.</p>
                     </div>
                     <div className='btn-div'>
-                        <button>WhatsApp us for More </button>
+                        <button> WhatsApp us for More </button>
                     </div>
                 </div>
+
                 <div className='bottom-content'>
-                    <div className='card'>
-                        <p><span>Everything you need</span></p>
-                        <h3>All-in-one platform</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo
-                            soluta, temporibus ea est ipsum vero recusandae blanditiis ut
-                            doloribus excepturi!</p>
-                    </div>
-                    <div className='card'>
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                    </div>
-                    <div className='card'>
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                    </div>
+                    <PricingTable highlightColor='#0dc143'>
+                        <PricingSlot  buttonText='TRY IT FREE' title='FREE' priceText='$0/month'>
+                            <PricingDetail> <b>100</b> Message</PricingDetail>
+                            <PricingDetail> <b>One </b> Month</PricingDetail>
+                            <PricingDetail strikethrough> <b>24/7</b> Support</PricingDetail>
+                        </PricingSlot>
+
+                        <PricingSlot highlighted  buttonText='SUBSCRIBE' title='PREMIUM ' priceText='$100/month'>
+                            <PricingDetail> <b>6000</b> Message</PricingDetail>
+                            <PricingDetail> <b>One</b> Month</PricingDetail>
+                            <PricingDetail> <b>24/7</b> Support</PricingDetail>
+                            
+                        </PricingSlot>
+
+                    </PricingTable>
+
                 </div>
             </div>
         </div>

@@ -1,6 +1,5 @@
 import React from 'react'
-import { FaWhatsapp, FaRegLightbulb, FaRegClock, FaFacebook, FaTwitter, FaGithub } from 'react-icons/fa'
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { FaWhatsapp, FaRegLightbulb } from 'react-icons/fa'
 import './HeroStyles.css'
 
 const Hero = () => {

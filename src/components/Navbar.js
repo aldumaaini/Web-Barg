@@ -2,10 +2,9 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../assest/logo.png'
 import { FaBars, FaTimes } from 'react-icons/fa'
-import { Container, select, option } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
 import './NavbarStyles.css'
-import { Dropdown } from 'bootstrap';
 
 const Navbar = () => {
     const [click, setClick] = useState(false)

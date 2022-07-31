@@ -9,24 +9,21 @@ const Footer = () => {
         <div className='footer'>
             <div className='container'>
                 <div className='col solutions'>
-                    <h6>Solutions</h6>
+                    <h6>Useful Links</h6>
                     <ul>
-                        <li><Link to='/' className='link'>Marketing</Link></li>
-                        <li><Link to='/'className='link'>Analytics</Link></li>
-                        <li><Link to='/'className='link'>Commerce</Link></li>
-                        <li><Link to='/'className='link'>Insights</Link></li>
+                        <li><Link to='/' className='link'>Home</Link></li>
+                        <li><Link to='/' className='link'>Pricing</Link></li>
+                        <li><Link to='/' className='link'>FAQ</Link></li>
+                        <li><Link to='/' className='link'>Contact</Link></li>
                     </ul>
                 </div>
-                <div className='col support'>
-                    <h6>Support</h6>
+                {/* <div className='col support'>
+                    <h6>About </h6>
                     <ul>
-                        <li><Link to='/'className='link'>Pricing</Link></li>
-                        <li><Link to='/'className='link'>Documentation</Link></li>
-                        <li><Link to='/'className='link'>Guides</Link></li>
-                        <li><Link to='/'className='link'>API Status</Link></li>
+                        <p> WhatsApp Barq is<br/> your soltuion to expand your business  </p>
                     </ul>
-                </div>
-                <div className='col company'>
+                </div> */}
+                {/* <div className='col company'>
                     <h6>Company</h6>
                     <ul>
                         <li><Link to='/'className='link'>About</Link></li>
@@ -34,19 +31,19 @@ const Footer = () => {
                         <li><Link to='/'className='link'>Jops</Link></li>
                         <li><Link to='/'className='link'>Press</Link></li>
                     </ul>
-                </div>
+                </div> */}
                 <div className='col legal'>
                     <h6>Legal</h6>
                     <ul>
-                        <li><Link to='/'className='link'>Claim</Link></li>
-                        <li><Link to='/'className='link'>Privacy</Link></li>
-                        <li><Link to='/'className='link'>Cookies</Link></li>
-                        <li><Link to='/'className='link'>Terms</Link></li>
+
+                        <li><Link to='/' className='link'>Privacy</Link></li>
+                        <li><Link to='/' className='link'>Cookies</Link></li>
+                        <li><Link to='/' className='link'>Terms</Link></li>
                     </ul>
                 </div>
                 <div className='col-subscribe'>
                     <h6>Subscribe to our newsletter</h6>
-                    <p>The latest news, articles, and resources sent to your inbox weekly.</p>
+                    <p> The latest news, articles, and resources sent to your inbox.</p>
                     <div className='subscribe'>
                         <input type='email' placeholder='Enter your email' />
                         <button>Subscribe</button>
@@ -59,10 +56,10 @@ const Footer = () => {
                         <p>&copy; WhatsApp Barg, All rights reserved.</p>
                     </div>
                     <div>
-                        <FaFacebook size={20} style={{color: '#d3d3d3', marginRight: '10px'}} />
-                        <FaInstagram size={20} style={{color: '#d3d3d3', marginRight: '10px'}} />
-                        <FaTwitter size={20} style={{color: '#d3d3d3', marginRight: '10px'}} />
-                        <AiOutlineMail size={20} style={{color: '#d3d3d3', marginRight: '10px'}} />
+                        <FaFacebook size={20} style={{ color: '#d3d3d3', marginRight: '10px' }} />
+                        <FaInstagram size={20} style={{ color: '#d3d3d3', marginRight: '10px' }} />
+                        <FaTwitter size={20} style={{ color: '#d3d3d3', marginRight: '10px' }} />
+                        <AiOutlineMail size={20} style={{ color: '#d3d3d3', marginRight: '10px' }} />
                     </div>
                 </div>
             </div>
