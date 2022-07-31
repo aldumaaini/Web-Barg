@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../assest/logo.png'
 import { FaBars, FaTimes } from 'react-icons/fa'
+import { Container, select, option } from "react-bootstrap";
 
 import './NavbarStyles.css'
+import { Dropdown } from 'bootstrap';
 
 const Navbar = () => {
     const [click, setClick] = useState(false)
@@ -31,17 +33,26 @@ const Navbar = () => {
                     </li>
 
                     <li className='nav-item'>
-                        <Link to='/contact' className='nav-link'>Contact</Link>
+                        <Container>
+                            <select className="dropdown-toggle">
+                                <option value=''>English </option>
+                                <option value=''>العربية </option>
+                            </select>
+
+                        </Container>
                     </li>
 
-                    </ul>
+
+
+
+                </ul>
                 <div className='hamburger' onClick={handleClick}>
                     {click ? (<FaTimes size={20} style={{ color: '#ffffff' }} />) : (<FaBars size={20} style={{ color: '#ffffff' }} />)}
 
                 </div>
             </nav>
         </header>
-    )
+    );
 }
 
 export default Navbar

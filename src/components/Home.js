@@ -5,7 +5,7 @@ import Hero from './Hero'
 import Pricing from './Pricing'
 import Testimonials from './Testimonials'
 import Faq from './Faq'
-import { Contact } from './Contact'
+import Contact from './Contact'
 import Footer from './Footer'
 
 const Home = () => {

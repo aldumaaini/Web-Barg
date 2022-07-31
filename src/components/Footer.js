@@ -1,5 +1,6 @@
 import React from 'react'
-import { FaFacebook, FaGithub, FaInstagram, FaTwitter } from 'react-icons/fa'
+import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa'
+import { AiOutlineMail } from "react-icons/ai";
 import { Link } from 'react-router-dom'
 import './FooterStyles.css'
 
@@ -55,13 +56,13 @@ const Footer = () => {
             <div className='footer-bottom'>
                 <div className='content'>
                     <div className='rights'>
-                        <p>&copy; Workflow, Inc. All rights reserved.</p>
+                        <p>&copy; WhatsApp Barg, All rights reserved.</p>
                     </div>
                     <div>
                         <FaFacebook size={20} style={{color: '#d3d3d3', marginRight: '10px'}} />
                         <FaInstagram size={20} style={{color: '#d3d3d3', marginRight: '10px'}} />
                         <FaTwitter size={20} style={{color: '#d3d3d3', marginRight: '10px'}} />
-                        <FaGithub size={20} style={{color: '#d3d3d3', marginRight: '10px'}} />
+                        <AiOutlineMail size={20} style={{color: '#d3d3d3', marginRight: '10px'}} />
                     </div>
                 </div>
             </div>

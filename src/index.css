@@ -4,19 +4,21 @@
   padding: 0;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;700&display=swap');
 
 :root {
-  --primary: #6948ff;
+  --primary: #0dc143;
   --secondary: #553bcb;
   --darkgrey: #22262a;
   --lightgrey: #d3d3d3;
   --grey: #808080;
+  --gold:#d49b2f;
 }
 
 body {
 color: #333;
-font-family: 'Montserrat', sans-serif;
+font-family: 'Poppins', sans-serif;
+
 }
 
 ul {
@@ -49,5 +51,5 @@ button {
 
 button:hover {
   border: 1px solid var(--secondary);
-  background-color: var(--secondary);
+  background-color: var(--gold);
 }

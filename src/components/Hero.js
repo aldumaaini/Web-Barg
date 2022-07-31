@@ -1,5 +1,6 @@
 import React from 'react'
-import { FaDatabase, FaAsterisk, FaAccusoft, FaFacebook, FaTwitter, FaGithub } from 'react-icons/fa'
+import { FaWhatsapp, FaRegLightbulb, FaRegClock, FaFacebook, FaTwitter, FaGithub } from 'react-icons/fa'
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import './HeroStyles.css'
 
 const Hero = () => {
@@ -8,40 +9,41 @@ const Hero = () => {
             <div className='container'>
                 <div className='content'>
                     <div className='col-1'>
-                        <h1> WHATASAPP BARG </h1>
-                        <h2><span className='warning-color'>Your best choice in faster reach </span></h2>
+                        <h1> WHATASAPP BARG..  </h1>
+                        <h2><span className='warning-color'>All in one click </span></h2>
                         <p>
-                            Lorem 
-                            
-                            
-                            
-                              dolor sit amet, consec tetur adipisicing elit.
-                            Architecto iure fuga deleniti sit! Cum doloribus, nesciunt
-                            laboriosam eos praesentium veritatis!
+                            This solution is all what you really need to expand your business and target more people
                         </p>
+
                         <div className='used-by'>
-                            <p>USED BY</p>
+                            <p>ENJOY </p>
                             <div className='icons'>
-                                <i><FaDatabase /> Staxx</i>
-                                <i><FaAsterisk /> Star AI</i>
-                                <i><FaAccusoft /> Accusoft</i>
+                                <i><FaWhatsapp /> Support WhatsApp Web </i>
+                                <i><FaRegLightbulb /> One click Solution</i>
+                                <i>  
+                                    
+                                    
+                                    
+                                    
+                                     Available 24/7</i>
                             </div>
                         </div>
                     </div>
                     <div className='col-2'>
                         <div className='form-layout'>
                             <div className='form-container'>
-                                <p className='sign-in-txt'>Sign in with</p>
+            
 
                                 <div className='divider'>
-                                    <p><span>Or</span></p>
+                                    <p><span>Sign in </span></p>
                                 </div>
                                 <form action=''>
-                                    <input type='text' placeholder='Name' />
-                                    <input type='text' placeholder='Email Address' />
-                                    <input type='email' placeholder='Email' />
+                                    <input type='mobile' placeholder='Mobile Number 05412345645' />
                                     <input type='password' placeholder='Password' />
-                                    <button>Create your account</button>
+                                    <button> Sign in </button>
+
+                                
+                                    
                                 </form>
                             </div>
                             <div className='form-footer'>
