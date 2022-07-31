@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 import './PricingStyles.css'
 
 const Pricing = () => {
@@ -8,11 +9,11 @@ const Pricing = () => {
             <div className='container'>
                 <div className='top-content'>
                     <div>
-                        <h2>Everything you need for <span>$99 a month</span></h2>
+                        <h2>Everything you need for <span> Good price</span></h2>
                         <p>Includes every feature we offer plus unlimited projects and unlimited users.</p>
                     </div>
                     <div className='btn-div'>
-                        <button>Get started today</button>
+                        <button>WhatsApp us for More </button>
                     </div>
                 </div>
                 <div className='bottom-content'>
