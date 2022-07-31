@@ -2,7 +2,7 @@ import React from 'react'
 
 function OurClients() {
   return (
-    <div>OurClients</div>
+    <div> OurClients</div>
   )
 }
 

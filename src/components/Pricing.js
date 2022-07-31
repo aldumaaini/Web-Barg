@@ -10,15 +10,13 @@ const Pricing = () => {
             <div className='container'>
                 <div className='top-content'>
                     <div>
-                        <h2>Everything you need for <span> Good price</span></h2>
+                        <h2>Choose your plan to <span> Enjoy the App features</span></h2>
                         <p>Includes every feature we offer plus unlimited projects and unlimited users.</p>
                     </div>
-                    <div className='btn-div'>
-                        <button> WhatsApp us for More </button>
-                    </div>
+        
                 </div>
 
-                <div className='bottom-content'>
+                <div className='Pricings-tables'>
                     <PricingTable highlightColor='#0dc143'>
                         <PricingSlot  buttonText='TRY IT FREE' title='FREE' priceText='$0/month'>
                             <PricingDetail> <b>100</b> Message</PricingDetail>

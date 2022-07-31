@@ -8,6 +8,7 @@
     padding: 1rem;
     margin: auto;
     overflow: hidden;
+    align-content: center;
 }
 
 .pricing .top-content {
@@ -29,7 +30,7 @@
     color: var(--grey);
 }
 
-.pricing .bottom-content {
+.pricing .Pricings-tables {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 10px;
@@ -70,7 +71,7 @@
         grid-template-columns: 1fr;
     }
 
-    .pricing .container .bottom-content {
+    .pricing .container .Pricings-tables {
         display: inline-table;
         align-content: center;
     }

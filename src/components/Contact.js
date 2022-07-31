@@ -1,5 +1,6 @@
 import React from 'react'
-import { FaEnvelope, FaPhone } from 'react-icons/fa'
+import { FaAddressBook, FaEnvelope, FaMap, FaMobileAlt, FaPhone } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 import './ContactStyles.css'
 
 export const Contact = () => {
@@ -9,24 +10,24 @@ export const Contact = () => {
                 <div className='col-1'>
                     <div className='content'>
                         <div><h2>Get in touch</h2>
-                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam,
-                            iusto natus fugit saepe minima rem nemo laborum ea dolorum
-                                est.</p>
-                        </div>
-                        <div className='address'>
-                            <p>742 Evergreen Terrace</p>
-                            <p>Springfield, OR 12345</p>
+                            <p>WhatsApp Barg is Always looking for your contact
+                                We are Available 24/7 </p>
                         </div>
                         <div className='icons'>
-                            <FaPhone style={{marginRight: '1rem'}} />
-                            <p>+1 (555) 123-4567</p>
+                        <FaMap style={{marginRight: '1rem'}} />
+                            <p>Riyadh - Saudi Arabia</p>
+                            
+                        </div>
+                        <div className='icons'>
+                            <FaMobileAlt style={{marginRight: '1rem'}} />
+                            <p>+966 123 456 857</p>
                         </div>
                         <div className='icons'>
                             <FaEnvelope style={{marginRight: '1rem'}} />
-                            <p>support@example.com</p>
+                            <p>w-barg2@gmail.com</p>
                         </div>
                         <div className='careers'>
-                            <p>Looking for careers? <span>View all jop openings.</span></p>
+                            <p>Looking for Support? <span> <Link to="#" target="_blank" > View all jop openings. </Link> </span>  </p> 
                         </div>
                     </div>
                 </div>
