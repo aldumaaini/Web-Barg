@@ -4,13 +4,13 @@
     "private": true,
     "main": "index.js",
     "scripts": {
-        "client-install": "npm install --prefix website",
+        "client-install": "npm install --prefix client",
         "server-install": "npm install",
         "start": "node index.js",
         "server": "nodemon index.js",
-        "client": "cd website && npm start",
+        "client": "cd client && npm start",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
-        "digitalOcean-build": "cd site && npm install && npm build"
+        "digitalOcean-build": "cd client && npm install && npm build"
     },
     "dependencies": {
         "axios": "^0.27.2",
