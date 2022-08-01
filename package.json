@@ -1,49 +1,33 @@
 {
-  "name": "Web-Barg",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.15.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "antd": "^4.22.2",
-    "bootstrap": "^5.1.0",
-    "i18next": "^21.8.14",
-    "i18next-browser-languagedetector": "^6.1.4",
-    "i18next-http-backend": "^1.4.1",
-    "react": "^17.0.2",
-    "react-bootstrap": "^2.5.0-beta.1",
-    "react-dom": "^17.0.2",
-    "react-i18next": "^11.18.1",
-    "react-icons": "^4.3.1",
-    "react-pricing-table": "^0.3.0",
-    "react-router-dom": "^6.0.2",
-    "react-scripts": "^4.0.3",
-    "styled-components": "^5.3.5",
-    "web-vitals": "^1.1.2"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "name": "whatsBrqServer",
+    "version": "0.0.1",
+    "private": true,
+    "main": "index.js",
+    "scripts": {
+        "client-install": "npm install --prefix website",
+        "server-install": "npm install",
+        "start": "node index.js",
+        "server": "nodemon index.js",
+        "client": "cd website && npm start",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "digitalOcean-build": "cd site && npm install && npm build"
+    },
+    "dependencies": {
+        "axios": "^0.27.2",
+        "bcrypt": "^5.0.1",
+        "body-parser": "^1.20.0",
+        "cookie-parser": "~1.4.4",
+        "cors": "^2.8.5",
+        "debug": "~2.6.9",
+        "dotenv": "^10.0.0",
+        "express": "~4.16.1",
+        "fs": "^0.0.1-security",
+        "http-errors": "~1.6.3",
+        "jade": "~1.11.0",
+        "jsonwebtoken": "^8.5.1",
+        "moment": "^2.29.3",
+        "morgan": "~1.9.1",
+        "mysql2": "^2.3.3",
+        "nodemon": "^2.0.15"
+    }
 }
