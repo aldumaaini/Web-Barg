@@ -1,23 +1,23 @@
-import React from 'react'
-import './HomeStyles.css'
-import Navbar from './Navbar'
-import Hero from './Hero'
-import Pricing from './Pricing'
-import Faq from './Faq'
-import Contact from './Contact'
-import Footer from './Footer'
+import React from "react";
+import "./HomeStyles.css";
+import Navbar from "./Navbar";
+import Hero from "./Hero";
+import Pricing from "./Pricing";
+import Faq from "./Faq";
+import Contact from "./Contact";
+import Footer from "./Footer";
 
 const Home = () => {
-    return (
-        <div>
-            <Navbar />
-            <Hero />
-            <Pricing />
-            <Faq />
-            <Contact />
-            <Footer />
-        </div>
-    )
-}
+  return (
+    <div>
+      <Navbar />
+      <Hero />
+      <Pricing />
+      <Faq />
+      <Contact />
+      <Footer />
+    </div>
+  );
+};
 
-export default Home
+export default Home;

@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function P404() {
-  return (
-    <div> </div>
-  )
+  return <div> </div>;
 }
 
-export default P404
+export default P404;

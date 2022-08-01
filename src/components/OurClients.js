@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function OurClients() {
-  return (
-    <div> OurClients</div>
-  )
+  return <div> OurClients</div>;
 }
 
-export default OurClients
+export default OurClients;
