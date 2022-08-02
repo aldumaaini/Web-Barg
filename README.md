@@ -1,16 +1,16 @@
-# Getting Started with Create React App
+# WHATSBRQ EXT
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The main base code for WhatsBrq chrome extention webapp (backend + frontend).
 
-## Available Scripts
+# Versions
 
-In the project directory, you can run:
+#### NodeJS: v16.15.0
 
-### `npm start`
+#### npm: v8.5.5
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# HOW TO RUN IN DEVELOPMENT ENVIROMENT
 
+<<<<<<< HEAD
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
@@ -69,3 +69,9 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+=======
+1.  Run the following command to install frontend webapp deps `npm run client-install`
+2.  After installation done, install server deps using the following command `npm run server-install`
+3.  Run server first using `npm run server`
+4.  once the server is running, start react app (website) using the following command `npm run client` in new terminal. choose yes for running in another port as port 3000 will be used by server.
+>>>>>>> 62f83f194c71f3ee1e7f4afdbc67364f042e3eff
