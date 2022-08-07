@@ -7,7 +7,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;700&display=swap");
 
 :root {
-  --primary: #0dc143;
+  --primary: #0dc143 !important;
   --secondary: #553bcb;
   --darkgrey: #22262a;
   --lightgrey: #d3d3d3;
@@ -17,7 +17,21 @@
 
 body {
   color: #333;
-  font-family: "Poppins", sans-serif;
+  font-family: "Quicksand", sans-serif !important;
+}
+
+h1,
+h3,
+h4,
+h5,
+h2,
+p,
+span {
+  font-family: "Quicksand", sans-serif !important;
+}
+
+.button-submit {
+  border-radius: 5px !important;
 }
 
 ul {
@@ -33,6 +47,9 @@ a {
   color: var(--primary);
 }
 
+.nav-link {
+  color: #fff;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
@@ -46,6 +63,7 @@ button {
   background-color: var(--primary);
   color: #fff;
   cursor: pointer;
+  border-radius: 3px !important;
 }
 
 button:hover {

@@ -1,0 +1,53 @@
+//
+// _buttons.scss
+//
+
+button,
+a {
+  outline: none !important;
+}
+
+// Rounded Buttons
+.btn-rounded {
+  border-radius: 30px;
+}
+
+.btn-dark {
+  color: $gray-200 !important;
+}
+
+.btn-outline-dark {
+  &:hover {
+    color: $gray-200 !important;
+  }
+}
+
+.btn-link-eye {
+  font-weight: 400;
+  color: #4eac6d;
+  color: rgba(var(--bs-primary-rgb), 1);
+  text-decoration: none;
+}
+
+.btn-eye {
+  display: inline-block;
+  font-weight: 400;
+  width: 20%;
+  line-height: 1.5;
+  color: #495057;
+
+  cursor: pointer;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-color: transparent !important;
+  background-color: transparent;
+  border: 1px solid transparent;
+  //padding: 0.5rem 1rem;
+  font-size: 0.9375rem;
+  border-radius: 0.25rem;
+  &:hover {
+    //color: $gray-200 !important;
+    border-color: transparent;
+  }
+}
