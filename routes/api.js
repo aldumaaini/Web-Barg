@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const { CON } = require("../utlis/dbCon");
 const { ResponseHandler } = require("../utlis/ResponseHandler");
 const { verifyJWT } = require("../utlis/auth");
-const axios = require("axios");
+const shortid = require("shortid");
 const moment = require("moment");
 const router = express.Router();
 env.config({ path: "./.env" });
@@ -15,12 +15,12 @@ const SECRETKEY = process.env.SECRETKEY || "";
 ("");
 
 /* SIGN-UP router */
-
-router.post("/signup", async function (req, res) {
-  const { Fullname, phone, password, email } = req.body;
+//register-new-account
+router.post("/register-new-account", async function (req, res) {
+  const { name, phone, password, email } = req.body;
   const role = "user";
   const saltRounds = 10;
-
+  const referral_code = shortid.generate();
   CON.query(
     "SELECT COUNT(*) AS PhoneCount FROM users WHERE phone=?",
     [phone],
@@ -29,44 +29,173 @@ router.post("/signup", async function (req, res) {
       else {
         var phoneCount = results[0].PhoneCount;
         if (phoneCount === 1) {
-          res.status(500).send(ResponseHandler(400, null, null));
+          res
+            .status(404)
+            .send(
+              ResponseHandler(404, null, "This phone number already registred")
+            );
         } else {
-          bcrypt.hash(password, saltRounds, function (err, hashedPassword) {
-            if (err) res.status(500).send(ResponseHandler(500, null, null));
-            else {
-              CON.query(
-                "INSERT INTO users( FullName,role,email, password,phone)VALUES(?,?,?,?,?)",
-                [Fullname, role, email, hashedPassword, phone],
-                function (err) {
-                  if (err)
-                    res.status(500).send(ResponseHandler(500, null, null));
-                  else
-                    res
-                      .status(200)
-                      .send(ResponseHandler(200, null, "successfull"));
+          CON.query(
+            "SELECT COUNT(*) AS EmailCount FROM users WHERE email=?",
+            [email],
+            async function (err, results) {
+              if (err) res.status(500).send(ResponseHandler(500, null, null));
+              else {
+                var emailCount = results[0].EmailCount;
+                if (emailCount === 1) {
+                  res
+                    .status(404)
+                    .send(
+                      ResponseHandler(
+                        404,
+                        null,
+                        "This Email address already registred"
+                      )
+                    );
+                } else {
+                  bcrypt.hash(
+                    password,
+                    saltRounds,
+                    function (err, hashedPassword) {
+                      if (err)
+                        res.status(500).send(ResponseHandler(500, null, null));
+                      else {
+                        CON.query(
+                          "INSERT INTO users( FullName,role,email, password,phone,code)VALUES(?,?,?,?,?,?)",
+                          [
+                            name,
+                            role,
+                            email,
+                            hashedPassword,
+                            phone,
+                            referral_code,
+                          ],
+                          function (err, results) {
+                            if (err)
+                              res
+                                .status(500)
+                                .send(ResponseHandler(500, null, null));
+                            else {
+                              if (results.affectedRows > 0) {
+                                let userId = results.insertId;
+                                let ExpireDate = moment()
+                                  .add(7, "days")
+                                  .format("YYYY-MM-DD");
+                                CON.query(
+                                  "INSERT INTO userPlan( userId,planType,PlanExpireDate, planStatus,totalUsedMessage)VALUES(?,?,?,?,?)",
+                                  [userId, "Free", ExpireDate, "active", 0],
+                                  function (err, results) {
+                                    if (err)
+                                      res
+                                        .status(500)
+                                        .send(ResponseHandler(500, null, null));
+                                    else
+                                      res
+                                        .status(200)
+                                        .send(
+                                          ResponseHandler(
+                                            200,
+                                            null,
+                                            "successfull"
+                                          )
+                                        );
+                                  }
+                                );
+                              }
+                            }
+                          }
+                        );
+                      }
+                    }
+                  );
                 }
-              );
+              }
             }
-          });
+          );
         }
       }
     }
   );
 });
+
 router.get("/welcome", function (req, res) {
   res.status(200).send(ResponseHandler(200, { hi: "Hi" }, "success"));
 });
 
 /* LOGIN - router */
+router.post("/loginDashboard", function (req, res) {
+  const { email, password } = req.body;
+  CON.query(
+    "SELECT u.id AS userID, u.password,u.email,u.role,u.isPhoneVerified,u.code, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.email = ?",
+    [email],
+    async function (err, Results) {
+      if (err) {
+        res.status(500).send(ResponseHandler(500, null, null));
+      } else {
+        if (Results.length === 1) {
+          let userPassword = Results[0].password;
+          let userID = Results[0].userID;
+          let email = Results[0].email;
+          let FullName = Results[0].FullName;
+          let phone = Results[0].phone;
+          let isPhoneVerified = Results[0].isPhoneVerified;
+          let code = Results[0].code;
+          let role = Results[0].role;
+          let planType = Results[0].planType;
+          let PlanExpireDate = Results[0].PlanExpireDate;
+          let totalUsedMessage = Results[0].totalUsedMessage;
+          let planStatus = Results[0].planStatus;
+          const match = await bcrypt.compare(password, userPassword);
+          if (match) {
+            const token = jwt.sign({ userID: userID }, SECRETKEY, {
+              expiresIn: "30d",
+            });
+            let userData = {
+              token: token,
+              user: {
+                userId: userID,
+                FullName,
+                email,
+                isPhoneVerified,
+                code,
+                role,
+                phone,
+                planType, // plan type either Free or premiume
+                PlanExpireDate, // plan expiry date
+                totalUsedMessage, // this to track sent messages
+                planStatus, // either active or unactive
+              },
+            };
+
+            res.status(200).send(ResponseHandler(200, userData, "successfull"));
+          } else {
+            res
+              .status(401)
+              .send(ResponseHandler(401, null, "Password not matching"));
+          }
+        } else {
+          res
+            .status(404)
+            .send(
+              ResponseHandler(
+                404,
+                null,
+                "No account associated with this email"
+              )
+            );
+        }
+      }
+    }
+  );
+});
+
 router.post("/login", function (req, res) {
-  console.log(req.body);
   const { mobile, password } = req.body;
   CON.query(
     "SELECT u.id AS userID, u.password,u.email, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.phone = ?",
     [mobile],
     async function (err, Results) {
       if (err) {
-        console.log(err);
         res.status(500).send(ResponseHandler(500, null, null));
       } else {
         if (Results.length === 1) {
@@ -124,8 +253,9 @@ router.post("/login", function (req, res) {
 
 router.get("/isValidUser", verifyJWT, (req, res) => {
   const token = req.headers["x-auth-token"];
+
   CON.query(
-    "SELECT u.id AS userID, u.password,u.email, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.id = ?",
+    "SELECT u.id AS userID,u.role, u.password,u.email,u.isPhoneVerified,u.code, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.id = ?",
     req.user,
     (err, user) => {
       if (err) return res.status(500).send(ResponseHandler(500, null, null));
@@ -135,6 +265,9 @@ router.get("/isValidUser", verifyJWT, (req, res) => {
           let email = user[0].email;
           let FullName = user[0].FullName;
           let phone = user[0].phone;
+          let role = user[0].role;
+          let isPhoneVerified = user[0].isPhoneVerified;
+          let code = user[0].code;
           let planType = user[0].planType;
           let PlanExpireDate = user[0].PlanExpireDate;
           let totalUsedMessage = user[0].totalUsedMessage;
@@ -144,8 +277,11 @@ router.get("/isValidUser", verifyJWT, (req, res) => {
             user: {
               userId: userID,
               FullName,
+              isPhoneVerified,
+              code,
               email,
               phone,
+              role,
               planType, // plan type either Free or premiume
               PlanExpireDate, // plan expiry date
               totalUsedMessage, // this to track sent messages
@@ -162,11 +298,84 @@ router.get("/isValidUser", verifyJWT, (req, res) => {
     }
   );
 });
+//eidit email
+router.post("/edit-email", verifyJWT, async function (req, res) {
+  const { id, email } = req.body;
 
+  CON.query(
+    "UPDATE users SET email=? WHERE id =?",
+    [email, id],
+    function (err, results) {
+      if (err) res.status(500).send(ResponseHandler(500, null, null));
+      else {
+        res
+          .status(200)
+          .send(ResponseHandler(200, null, "Email updated successfully"));
+      }
+    }
+  );
+});
+
+//edit password
+
+router.post("/edit-password", verifyJWT, (req, res) => {
+  const { id, newPassword, oldPassword } = req.body;
+
+  CON.query("SELECT * FROM users WHERE id=? ", [id], function (err, Results) {
+    if (err) res.status(500).send(ResponseHandler(500, null, null));
+    else {
+      let curpass = Results[0].password;
+      bcrypt.compare(oldPassword, curpass).then((result) => {
+        if (result === false) {
+          res
+            .status(401)
+            .send(ResponseHandler(401, null, "Old password not matching"));
+        } else {
+          var saltRounds = 10;
+          bcrypt.hash(newPassword, saltRounds, function (err, HashedPassword) {
+            CON.query(
+              "UPDATE users SET password=? WHERE id=? ",
+              [HashedPassword, id],
+              function (err, Results) {
+                if (err) res.status(500).send(ResponseHandler(500, null, null));
+                else {
+                  res
+                    .status(200)
+                    .send(
+                      ResponseHandler(
+                        200,
+                        null,
+                        "Password updated successfully"
+                      )
+                    );
+                }
+              }
+            );
+          });
+        }
+      });
+    }
+  });
+});
+
+//phone-verify
+router.post("/verify-phone", verifyJWT, async function (req, res) {
+  const { id } = req.body;
+
+  CON.query(
+    "UPDATE users SET isPhoneVerified=? WHERE id =?",
+    [1, id],
+    function (err, results) {
+      if (err) res.status(500).send(ResponseHandler(500, null, null));
+      else {
+        res.status(200).send(ResponseHandler(200, null, "successfull"));
+      }
+    }
+  );
+});
 /* UserPlanValidation - router */
 
 router.get("/UserPlanValidation", verifyJWT, (req, res) => {
-  console.log("req.user= ", req.user);
   CON.query(
     "SELECT * FROM userPlan  WHERE userId= ?",
     req.user,

@@ -3,10 +3,16 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-
-ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById("root")
+import "./i18n";
+import { Provider } from "react-redux";
+import store from "./store";
+import { configureStore } from "./store";
+const app = (
+  <Provider store={configureStore({})}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>
 );
+
+ReactDOM.render(app, document.getElementById("root"));

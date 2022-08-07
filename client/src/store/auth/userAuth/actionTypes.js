@@ -1,0 +1,3 @@
+export const IS_AUTH_USER = "IS_AUTH_USER";
+export const IS_AUTH_USER_SUCCESS = "IS_AUTH_USER_SUCCESS";
+export const API_ERROR = "IS_AUTH_USER_API_ERROR";
