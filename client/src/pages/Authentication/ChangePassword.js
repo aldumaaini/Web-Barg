@@ -1,48 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Row, Col, Form } from "reactstrap";
-
+import { useParams } from "react-router-dom";
 // hooks
 //import { useRedux } from "../../hooks/index";
-
+import { useRedux } from "hooks";
+import { userNewPassword } from "store/actions";
 // validations
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 
-// // hooks
-// import { useProfile } from "../../hooks";
-
-//actions
-//import { userChangePassword } from "../../redux/actions";
-
-// components
 import NonAuthLayoutWrapper from "../../components/NonAutnLayoutWrapper";
 import AuthHeader from "../../components/AuthHeader";
 import FormInput from "../../components/FormInput";
-//import Loader from "../../components/Loader";
-
-//images
-import avatar1 from "../../assets/images/users/avatar-1.jpg";
+import Loader from "components/Loader";
 
 const ChangePassword = (props) => {
-  // global store
-  //const { dispatch, useAppSelector } = useRedux();
+  const { token } = useParams();
+  const [hashedToken, setHashedToken] = useState(null);
+  const { useAppSelector, dispatch } = useRedux();
+  const { newPasswordSuccessMsg, newPasswordError, newPasswordPassLoading } =
+    useAppSelector((state) => ({
+      newPasswordError: state.ForgetPassword.newPasswordError,
+      newPasswordSuccessMsg: state.ForgetPassword.newPasswordSuccessMsg,
+      newPasswordPassLoading: state.ForgetPassword.newPasswordPassLoading,
+    }));
 
-  /*  const { changepasswordError, passwordChanged, changePassLoading } =
-    useAppSelector(state => ({
-      passwordChanged: state.ForgetPassword.passwordChanged,
-      changepasswordError: state.ForgetPassword.changepasswordError,
-      changePassLoading: state.ForgetPassword.loading,
-    }));*/
+  useEffect(() => {
+    if (token) {
+      setHashedToken(token);
+    }
+  }, []);
 
   const resolver = yupResolver(
     yup.object().shape({
-      oldPassword: yup.string().required("Please Enter Old Password."),
       password: yup.string().required("Please Enter New Password."),
       confirmpassword: yup
         .string()
         .oneOf([yup.ref("password"), null], "Passwords don't match")
-        .required("This value is required."),
+        .required("Confirm new password value is required."),
     })
   );
 
@@ -57,7 +53,9 @@ const ChangePassword = (props) => {
   } = methods;
 
   const onSubmitForm = (values) => {
-    // dispatch(userChangePassword(values));
+    let valuess = { ...values, hashedToken };
+
+    dispatch(userNewPassword(valuess));
   };
 
   // const { userProfile, loading } = useProfile();
@@ -69,12 +67,12 @@ const ChangePassword = (props) => {
           <div className="py-md-5 py-4">
             <AuthHeader title="Change Password" />
 
-            {/* && changepasswordError ? (
-              <Alert color="danger">{changepasswordError}</Alert>
+            {newPasswordError ? (
+              <Alert color="danger">{newPasswordError}</Alert>
             ) : null}
-            {passwordChanged ? (
-              <Alert color="success">Your Password is changed</Alert>
-            ) : null*/}
+            {newPasswordSuccessMsg ? (
+              <Alert color="success">{newPasswordSuccessMsg}</Alert>
+            ) : null}
 
             <Form
               onSubmit={handleSubmit(onSubmitForm)}
@@ -115,14 +113,13 @@ const ChangePassword = (props) => {
 
               <div className="text-center mt-4">
                 <div className="row">
-                  <div className="col-6">
-                    <button className="btn btn-primary w-100" type="submit">
-                      Save
-                    </button>
-                  </div>
-                  <div className="col-6">
-                    <button className="btn btn-light w-100" type="button">
-                      Cancel
+                  <div className="col">
+                    <button
+                      className="btn btn-primary w-100"
+                      type="submit"
+                      disabled={newPasswordPassLoading ? true : false}
+                    >
+                      Reset password
                     </button>
                   </div>
                 </div>
@@ -130,6 +127,7 @@ const ChangePassword = (props) => {
             </Form>
           </div>
         </Col>
+        {newPasswordPassLoading && <Loader />}
       </Row>
     </NonAuthLayoutWrapper>
   );

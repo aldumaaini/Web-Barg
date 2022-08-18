@@ -27,38 +27,40 @@ import {
 } from "../../helpers/backend_helper";
 
 function* fetchUsers() {
-  try {
-    const response = yield call(getUsers);
-    yield put(getUsersSuccess(response));
-  } catch (error) {
-    yield put(getUsersFail(error));
+  const response = yield call(getUsers);
+
+  if (response.success === true) {
+    yield put(getUsersSuccess(response.data));
+  } else {
+    yield put(getUsersFail(response.message));
   }
 }
 
-function* onAddNewUser({ payload: user }) {
-  try {
-    const response = yield call(addNewUser, user);
-    yield put(addNewUser(response));
-  } catch (error) {
-    yield put(addUserFail(error));
+function* onAddNewUser({ payload: { user } }) {
+  const response = yield call(addNewUser, user);
+  if (response.success === true) {
+    yield put(addUserSuccess(response));
+  } else {
+    yield put(addUserFail(response.message));
   }
 }
 
-function* onUpdateUser({ payload: user }) {
-  try {
-    const response = yield call(updateUser, user);
+function* onUpdateUser({ payload: { user } }) {
+  const response = yield call(updateUser, user);
+  if (response.success === true) {
     yield put(updateUserSuccess(response));
-  } catch (error) {
-    yield put(updateUserFail(error));
+  } else {
+    yield put(updateUserFail(response.message));
   }
 }
 
-function* onDeleteUser({ payload: user }) {
-  try {
-    const response = yield call(deleteUser, user);
-    yield put(deleteUserSuccess(response));
-  } catch (error) {
-    yield put(deleteUserFail(error));
+function* onDeleteUser({ payload: { id } }) {
+  const response = yield call(deleteUser, id);
+
+  if (response.success === true) {
+    yield put(deleteUserSuccess(response.data));
+  } else {
+    yield put(deleteUserFail(response.message));
   }
 }
 

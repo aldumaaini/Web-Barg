@@ -29,7 +29,7 @@ export const getUsersFail = (error) => ({
 
 export const addNewUser = (user) => ({
   type: ADD_NEW_USER,
-  payload: user,
+  payload: { user },
 });
 
 export const addUserSuccess = (user) => ({
@@ -44,7 +44,7 @@ export const addUserFail = (error) => ({
 
 export const updateUser = (user) => ({
   type: UPDATE_USER,
-  payload: user,
+  payload: { user },
 });
 
 export const updateUserSuccess = (user) => ({
@@ -57,14 +57,14 @@ export const updateUserFail = (error) => ({
   payload: error,
 });
 
-export const deleteUser = (user) => ({
+export const deleteUser = (id) => ({
   type: DELETE_USER,
-  payload: user,
+  payload: { id },
 });
 
-export const deleteUserSuccess = (user) => ({
+export const deleteUserSuccess = (id) => ({
   type: DELETE_USER_SUCCESS,
-  payload: user,
+  payload: id,
 });
 
 export const deleteUserFail = (error) => ({

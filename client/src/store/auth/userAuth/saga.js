@@ -14,6 +14,7 @@ function* isAuthUser(props) {
   if (response.success === true) {
     localStorage.setItem("authToken", JSON.stringify(response.data.token));
     localStorage.setItem("authUser", JSON.stringify(response.data.user));
+
     yield put(isAuthUserSuccess(response));
 
     props.payload.history.push(

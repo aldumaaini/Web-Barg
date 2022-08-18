@@ -19,32 +19,22 @@ import DeleteModal from "./DeleteModal";
 //css
 
 const Users = (props) => {
-  const [modal, setModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [event, setEvent] = useState({});
 
   const [isEdit, setIsEdit] = useState(false);
 
-  useEffect(() => {
-    if (!modal && !isEmpty(event) && !!isEdit) {
-      setTimeout(() => {
-        setEvent({});
-        setIsEdit(false);
-      }, 500);
-    }
-  }, [modal, event]);
-
   /**
    * Handling the modal state
    */
-  const toggle = () => {
-    setModal(!modal);
-  };
 
   /**
    * On delete event
    */
-  const handleAddNewUser = () => {};
+  const handleAddNewUser = () => {
+    // setIsAddingUser(true);
+    //setDeleteModal(true);
+  };
   const handleDeleteEvent = () => {
     const { onDeleteEvent } = props;
     onDeleteEvent(event);
@@ -72,9 +62,7 @@ const Users = (props) => {
                 breadcrumbItem="Users"
                 buttonName="Create New user"
                 haveButton={true}
-                handleOnClick={() => {
-                  handleAddNewUser();
-                }}
+                handleOnClick={handleAddNewUser}
               />
             </Row>
           </div>

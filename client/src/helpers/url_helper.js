@@ -1,23 +1,26 @@
 //REGISTER
 export const POST_REGISTER = "/register-new-account";
-
+export const MEMBERSHIP_VALIDATION = "/UserPlanValidation";
 //LOGIN
 export const POST_LOGIN = "/loginDashboard";
 export const GET_AUTHENTICATE_USER = "/isValidUser";
 export const POST_FORGOT_PASSWORD = "/password-reset";
+export const POST_NEW_PASSWORD = "/new-password";
+//PROFILE
 export const POST_EDIT_PROFILE_EMAIL = "/edit-email";
 export const POST_EDIT_PROFILE_PASSWORD = "/edit-password";
 export const POST_EDIT_PROFILE_VERIFY_PHONE = "/verify-phone";
 
-export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";
-export const POST_FAKE_PASSWORD_FORGET = "/fake-forget-pwd";
-export const POST_FAKE_JWT_PASSWORD_FORGET = "/jwt-forget-pwd";
+//USERS ADMIN
+export const GET_USERS = "/users-admin";
+export const ADD_NEW_USER = "/add-new-user-admin";
+export const UPDATE_USER = "/update-user-admin";
+export const DELETE_USER = "/delete-user-admin";
 
-export const POST_FAKE_LOGIN = "/post-fake-login";
-export const POST_FAKE_REGISTER = "/post-fake-register";
-//PROFILE
-export const POST_EDIT_JWT_PROFILE = "/post-jwt-profile";
-export const POST_EDIT_PROFILE = "/post-fake-profile";
+// COUPONES
+export const GET_COUPONE = "/coupons-admin";
+export const ADD_NEW_COUPONE = "/add-new-coupons-admin";
+export const DELETE_COUPONE = "/delete-coupons-admin";
 
 //CALENDER
 export const GET_EVENTS = "/events";

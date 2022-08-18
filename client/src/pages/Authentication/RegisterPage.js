@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert, Row, Col, Form, Button, Label } from "reactstrap";
 import { useRedux, useProfile } from "hooks";
 import { Link, Redirect } from "react-router-dom";
@@ -17,7 +17,7 @@ const RegisterPage = (props) => {
   // global store
   const { dispatch, useAppSelector } = useRedux();
   const [phone, setphone] = React.useState("");
-
+  const [ReferralCode, setReferralCode] = React.useState(null);
   const { user, registrationError, regLoading, message } = useAppSelector(
     (state) => ({
       user: state.Account.user,
@@ -49,7 +49,7 @@ const RegisterPage = (props) => {
   } = methods;
 
   const onSubmitForm = (values) => {
-    let registrationData = { ...values, phone };
+    let registrationData = { ...values, phone, ReferralCode };
 
     dispatch(registerUser(registrationData));
   };
@@ -60,6 +60,14 @@ const RegisterPage = (props) => {
     return <Redirect to={{ pathname: "/dashboard" }} />;
   }
 
+  useEffect(() => {
+    if (typeof props.location.state === "undefined") {
+      setReferralCode(null);
+    } else {
+      setReferralCode(props.location.state.referral_code);
+    }
+  }, []);
+
   return (
     <NonAuthLayoutWrapper>
       <Row className=" justify-content-center my-auto">
@@ -69,6 +77,9 @@ const RegisterPage = (props) => {
               title="Register Account"
               subtitle="Get your free account now."
             />
+            {ReferralCode ? (
+              <Alert color="info">You are joining us using referral link</Alert>
+            ) : null}
 
             {user && user ? (
               <Alert color="success">Register User Successfully</Alert>

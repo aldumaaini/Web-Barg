@@ -1,16 +1,10 @@
 import axios from "axios";
-import accessToken from "./jwt-token-access/accessToken";
-//pass new generated access token here
 
-//apply base url for axios
 const API_URL = "/api";
 
 const axiosApi = axios.create({
   baseURL: API_URL,
-  headers: { "x-auth-token": accessToken },
 });
-
-//axiosApi.defaults.headers.common["Authorization"] = token;
 
 axiosApi.interceptors.response.use(
   (response) => response,
@@ -18,27 +12,35 @@ axiosApi.interceptors.response.use(
 );
 
 export async function get(url, config = {}) {
+  const accessToken = JSON.parse(localStorage.getItem("authToken"));
+  let headers = { "x-auth-token": accessToken };
   return await axiosApi
-    .get(url, { ...config })
+    .get(url, { headers, ...config })
     .then((response) => response.data)
     .catch((error) => error.response.data);
 }
 
 export async function post(url, data, config = {}) {
+  const accessToken = JSON.parse(localStorage.getItem("authToken"));
+  let headers = { "x-auth-token": accessToken };
   return await axiosApi
-    .post(url, { ...data }, { ...config })
+    .post(url, { ...data }, { headers, ...config })
     .then((response) => response.data)
     .catch((error) => error.response.data);
 }
 
 export async function put(url, data, config = {}) {
+  const accessToken = JSON.parse(localStorage.getItem("authToken"));
+  let headers = { "x-auth-token": accessToken };
   return axiosApi
-    .put(url, { ...data }, { ...config })
+    .put(url, { ...data }, { headers, ...config })
     .then((response) => response.data);
 }
 
 export async function del(url, config = {}) {
+  const accessToken = JSON.parse(localStorage.getItem("authToken"));
+  let headers = { "x-auth-token": accessToken };
   return await axiosApi
-    .delete(url, { ...config })
+    .delete(url, { headers, ...config })
     .then((response) => response.data);
 }

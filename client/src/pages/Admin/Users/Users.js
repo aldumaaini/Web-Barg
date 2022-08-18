@@ -1,57 +1,105 @@
 import React, { useEffect, useState } from "react";
 import MetaTags from "react-meta-tags";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { isEmpty } from "lodash";
-import { Link } from "react-router-dom";
-import { Col, Container, Row, Card, CardBody, Button } from "reactstrap";
 
-//Import Breadcrumb
+import moment from "moment";
 
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
 import {
-  addNewUser,
-  deleteUser,
-  getUsers,
-  updateUser,
-} from "../../../store/actions";
+  Col,
+  Container,
+  Row,
+  Card,
+  CardBody,
+  Button,
+  Form,
+  Alert,
+} from "reactstrap";
+import FormInput from "components/FormInput";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+//Import Breadcrumb
+import { useRedux } from "hooks";
+import Breadcrumbs from "../../../components/Common/Breadcrumb";
+import { addNewUser, deleteUser, getUsers } from "../../../store/actions";
 import DeleteModal from "./DeleteModal";
 //css
+import Loader from "components/Loader";
 
 const Users = (props) => {
-  const [modal, setModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [event, setEvent] = useState({});
 
-  const [isEdit, setIsEdit] = useState(false);
+  const [DeleteId, setDeleteId] = useState(null);
+
+  const [isAddingUser, setIsAddingUser] = useState(false);
+  const { dispatch, useAppSelector } = useRedux();
+
+  const { users, error, loading, success, message } = useAppSelector(
+    (state) => ({
+      error: state.Users.error,
+      users: state.Users.users,
+      message: state.Users.message,
+      loading: state.Users.loading,
+      success: state.Users.success,
+    })
+  );
+
+  const resolver = yupResolver(
+    yup.object().shape({
+      email: yup
+        .string()
+        .email("This value should be a valid email.")
+        .required("Please Enter E-mail."),
+      name: yup.string().required("Please Enter your name."),
+      password: yup.string().required("Please Enter Password."),
+      phone: yup.string().required("Please Enter phone number."),
+    })
+  );
+
+  const defaultValues = {};
+
+  const methods = useForm({ defaultValues, resolver });
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors },
+  } = methods;
+
+  const onSubmitForm = (values) => {
+    dispatch(addNewUser(values));
+    // let registrationData = { ...values, phone };
+    // dispatch(registerUser(registrationData));
+  };
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(getUsers());
+    }, 100);
+  }, [success]);
 
   useEffect(() => {
-    if (!modal && !isEmpty(event) && !!isEdit) {
+    if (success && !error) {
       setTimeout(() => {
-        setEvent({});
-        setIsEdit(false);
+        setIsAddingUser(false);
       }, 500);
     }
-  }, [modal, event]);
-
-  /**
-   * Handling the modal state
-   */
-  const toggle = () => {
-    setModal(!modal);
-  };
+  }, [success]);
 
   /**
    * On delete event
    */
-  const handleAddNewUser = () => {};
-  const handleDeleteEvent = () => {
-    const { onDeleteEvent } = props;
-    onDeleteEvent(event);
-    setDeleteModal(false);
-    toggle();
+  const handleOnEdit = () => {};
+  const handleOnDelete = (id) => {
+    setDeleteId(id);
+    setDeleteModal(true);
   };
-
+  const handleAddNewUser = () => {
+    setIsAddingUser(true);
+  };
+  const handleDeleteEvent = () => {
+    dispatch(deleteUser(DeleteId));
+    setDeleteModal(false);
+  };
+  if (loading) return <Loader />;
   return (
     <React.Fragment>
       <DeleteModal
@@ -80,78 +128,179 @@ const Users = (props) => {
           </div>
           <Row>
             <Col className="col-12">
+              {error !== null && <Alert color="danger">{error}</Alert>}
+              {isAddingUser ? (
+                <Form
+                  onSubmit={handleSubmit(onSubmitForm)}
+                  className="position-relative"
+                >
+                  <div className="mb-3">
+                    <FormInput
+                      label="Name"
+                      type="text"
+                      name="name"
+                      register={register}
+                      errors={errors}
+                      control={control}
+                      labelClassName="form-label"
+                      placeholder="Enter full name"
+                      className="form-control"
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <FormInput
+                      label="Email"
+                      type="text"
+                      name="email"
+                      register={register}
+                      errors={errors}
+                      control={control}
+                      labelClassName="form-label"
+                      placeholder="Enter Email"
+                      className="form-control"
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <FormInput
+                      label="Password"
+                      type="password"
+                      name="password"
+                      register={register}
+                      errors={errors}
+                      control={control}
+                      withoutLabel={true}
+                      labelClassName="form-label"
+                      className="form-control pe-5"
+                      placeholder="Enter Password"
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <FormInput
+                      label="Phone number"
+                      type="text"
+                      name="phone"
+                      register={register}
+                      errors={errors}
+                      control={control}
+                      withoutLabel={true}
+                      labelClassName="form-label"
+                      className="form-control pe-5"
+                      placeholder="Enter phone number, eg; +966509336310"
+                    />
+                  </div>
+
+                  <div className="text-center mb-3">
+                    <Button
+                      color="primary"
+                      className="w-100  waves-effect waves-light"
+                      type="submit"
+                    >
+                      Add user
+                    </Button>
+                  </div>
+                </Form>
+              ) : null}
               {/* transactios table  */}
-              <Row>
-                <Col xl={12}>
-                  <Card>
-                    <CardBody>
-                      <h4 className="card-title mb-4">Users</h4>
-                      <div className="table-responsive">
-                        <table className="table table-hover table-centered table-nowrap mb-0">
-                          <thead>
-                            <tr>
-                              <th scope="col"> No.</th>
-                              <th scope="col">Name</th>
-                              <th scope="col">Plan</th>
-                              <th scope="col">Joined Date</th>
-                              <th scope="col">Status</th>
-                              <th scope="col" colSpan="4">
-                                Actions
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <th scope="row">#14256</th>
+              {!isAddingUser ? (
+                <Row>
+                  <Col xl={12}>
+                    <Card>
+                      <CardBody>
+                        <h4 className="card-title mb-4">Users</h4>
+                        <div className="table-responsive">
+                          <table className="table table-hover table-centered table-nowrap mb-0">
+                            <thead>
+                              <tr>
+                                <th scope="col"> No.</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Phone No.</th>
+                                <th scope="col">Emaill</th>
+                                <th scope="col">Plan type</th>
+                                <th scope="col">Plan expiry</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" colSpan="4">
+                                  Actions
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {!loading && users
+                                ? users.map((i) => (
+                                    <tr>
+                                      <th scope="row">#{i.userID}</th>
 
-                              <td>Mubarak</td>
-                              <td>FREE</td>
-                              <td>
-                                <span className="badge bg-success">
-                                  05/08/2022
-                                </span>
-                              </td>
-                              <td>
-                                <span className="badge bg-success">Active</span>
-                              </td>
-                              <td>
-                                <div
-                                  style={{
-                                    // display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    width: 110,
-                                  }}
-                                >
-                                  <Button
-                                    color="primary"
-                                    size="sm"
-                                    style={{ width: 50, height: 30 }}
-                                  >
-                                    <i className="mdi mdi-pencil "></i>
-                                  </Button>
+                                      <td>{i.FullName}</td>
+                                      <td>{i.phone}</td>
+                                      <td>{i.email}</td>
+                                      <td>
+                                        <span
+                                          className={
+                                            i.planType === "Free"
+                                              ? "badge bg-success"
+                                              : "badge bg-danger"
+                                          }
+                                        >
+                                          {i.planType}
+                                        </span>
+                                      </td>
+                                      <td>
+                                        {moment(i.PlanExpireDate).format(
+                                          "YYYY-MM-DD"
+                                        )}
+                                      </td>
+                                      <td>
+                                        <span className="badge bg-success">
+                                          {i.planStatus}
+                                        </span>
+                                      </td>
+                                      <td>
+                                        <div
+                                          style={{
+                                            // display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            width: 110,
+                                          }}
+                                        >
+                                          {/*  <Button
+                                            color="primary"
+                                            size="sm"
+                                            style={{ width: 50, height: 30 }}
+                                            onClick={() => {
+                                              handleOnEdit(i.userID);
+                                            }}
+                                          >
+                                            <i className="mdi mdi-pencil "></i>
+                                          </Button>*/}
 
-                                  <Button
-                                    color="danger"
-                                    size="sm"
-                                    style={{
-                                      width: 50,
-                                      height: 30,
-                                      marginLeft: 5,
-                                    }}
-                                  >
-                                    <i className="mdi mdi-delete "></i>
-                                  </Button>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
+                                          <Button
+                                            color="danger"
+                                            size="sm"
+                                            style={{
+                                              width: 50,
+                                              height: 30,
+                                              marginLeft: 5,
+                                            }}
+                                            onClick={() => {
+                                              handleOnDelete(i.userID);
+                                            }}
+                                          >
+                                            <i className="mdi mdi-delete "></i>
+                                          </Button>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  ))
+                                : null}
+                            </tbody>
+                          </table>
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </Col>
+                </Row>
+              ) : null}
             </Col>
           </Row>
         </Container>
@@ -160,24 +309,4 @@ const Users = (props) => {
   );
 };
 
-Users.propTypes = {
-  users: PropTypes.array,
-  className: PropTypes.string,
-  onGetUsers: PropTypes.func,
-  onAddNewUser: PropTypes.func,
-  onUpdateUser: PropTypes.func,
-  onDeleteUser: PropTypes.func,
-};
-
-const mapStateToProps = ({ users }) => ({
-  users: users,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onGetUsers: () => dispatch(getUsers()),
-  onAddNewUser: (user) => dispatch(addNewUser(user)),
-  onUpdateUser: (user) => dispatch(updateUser(user)),
-  onDeleteUser: (user) => dispatch(deleteUser(user)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Users);
+export default Users;

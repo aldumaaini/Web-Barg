@@ -1,68 +1,64 @@
 import React, { useEffect, useState } from "react";
 import MetaTags from "react-meta-tags";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { isEmpty } from "lodash";
+
 import { Redirect } from "react-router-dom";
-import { Col, Container, Row, Card, CardBody, Button } from "reactstrap";
+import { Col, Container, Row, Card, CardBody, Alert } from "reactstrap";
 import Loader from "components/Loader";
-import { useProfile } from "hooks";
+import CardPricing from "pages/Utility/card-pricing";
+import "./card.css";
 //Import Breadcrumbs
-
+import moment from "moment";
 import Breadcrumbs from "components/Common/Breadcrumb";
-
-import {
-  /* addNewUser,
-  deleteUser,
-  getUsers,
-  updateUser,*/
-  isAuthUser,
-  apiError,
-} from "../../../store/actions";
+import { useProfile, useRedux } from "hooks";
 import DeleteModal from "./DeleteModal";
+import { getMemeberShip } from "store/actions";
 //css
-
+import Cards from "react-credit-cards";
+import "react-credit-cards/lib/styles.scss";
 const Memebership = (props) => {
-  const [modal, setModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [event, setEvent] = useState({});
-  const [isEdit, setIsEdit] = useState(false);
   const { userProfile } = useProfile();
+  const { useAppSelector, dispatch } = useRedux();
 
-  /*useEffect(() => {
-    if (!modal && !isEmpty(event) && !!isEdit) {
-      setTimeout(() => {
-        setEvent({});
-        setIsEdit(false);
-      }, 500);
-    }
-  }, [modal, event]);*/
+  const { error, success, memebershipvalidation } = useAppSelector((state) => ({
+    success: state.MemberShip.success,
+    error: state.MemberShip.error,
+    memebershipvalidation: state.MemberShip.memebershipvalidation,
+  }));
+
+  useEffect(() => {
+    dispatch(getMemeberShip());
+  }, []);
+
   if (userProfile && userProfile.isPhoneVerified === 0) {
     return <Redirect to={{ pathname: "/phone-number-verification" }} />;
   }
-  /**
-   * Handling the modal state
-   */
-  const toggle = () => {
-    setModal(!modal);
-  };
-
+  const pricings = [
+    {
+      id: 2,
+      title: "PREMIUM",
+      description: "Premium plan with unlimited features",
+      buttonTitle: "SUBSCRIBE",
+      icon: "ion ion-ios-trophy",
+      price: "100",
+      duration: "Per month",
+      link: "",
+      features: [
+        { icon: "mdi mdi-check", title: "+6000 messages" },
+        { icon: "mdi mdi-check", title: "One month" },
+        { icon: "mdi mdi-check", title: "24/7 Support" },
+      ],
+    },
+  ];
   /**
    * On delete event
    */
-  const handleAddNewUser = () => {};
-  const handleDeleteEvent = () => {
-    const { onDeleteEvent } = props;
-    onDeleteEvent(event);
-    setDeleteModal(false);
-    toggle();
-  };
 
   return (
     <React.Fragment>
       <DeleteModal
         show={deleteModal}
-        onDeleteClick={handleDeleteEvent}
+        //onDeleteClick={handleDeleteEvent}
         onCloseClick={() => setDeleteModal(false)}
       />
       <div className="page-content">
@@ -75,23 +71,82 @@ const Memebership = (props) => {
               {/* Render Breadcrumb */}
               <Breadcrumbs
                 title="Whtasapp Barg"
-                breadcrumbItem="Users"
-                buttonName="Create New user"
+                breadcrumbItem="Membership"
+                // buttonName="Create New user"
                 haveButton={false}
-                handleOnClick={() => {
-                  handleAddNewUser();
-                }}
               />
             </Row>
           </div>
           <Row>
+            {error !== null ? (
+              error.code === 100 ? (
+                error.planType === "Free" ? (
+                  <div className=" py-4">
+                    <Alert color="danger">
+                      Your free trial plan has been expired.
+                    </Alert>
+                  </div>
+                ) : (
+                  <div className=" py-4">
+                    <Alert color="danger">
+                      Your subscription has been ended. please subscribe to
+                      enjoy unlimited use of the extention
+                    </Alert>
+                  </div>
+                )
+              ) : error.code === 101 ? (
+                <div className=" py-4">
+                  <Alert color="danger">
+                    Your account has been disabled, please{" "}
+                    <a target="_blank" href="#">
+                      contact us
+                    </a>{" "}
+                    for more information.
+                  </Alert>
+                </div>
+              ) : error.code === 102 ? (
+                <div className=" py-4">
+                  <Alert color="danger">
+                    you have exceeded the limit of messages for free accounts
+                  </Alert>
+                </div>
+              ) : (
+                <div className=" py-4">
+                  <Alert color="info">Your Membership is active</Alert>
+                </div>
+              )
+            ) : null}
+
             <Col className="col-12">
               {/* transactios table  */}
               <Row>
-                <Col xl={12}>
+                <Col>
+                  <Card>
+                    <CardBody style={{ paddingTop: 30, paddingBottom: 50 }}>
+                      <h4 className="card-title mb-4">Memebership Card</h4>
+                      <Cards
+                        locale={{ valid: "Expires" }}
+                        cvc={"333"}
+                        expiry={moment(userProfile.PlanExpireDate).format(
+                          "MM/DD"
+                        )}
+                        // expiryyear={"2022"}
+                        focused={true}
+                        name={userProfile.FullName}
+                        number={userProfile.memeberShipNumber}
+                      />
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </Col>
+            <Col className="col-12">
+              {/* transactios table  */}
+              <Row>
+                <Col>
                   <Card>
                     <CardBody>
-                      <h4 className="card-title mb-4">Memebership</h4>
+                      <h4 className="card-title mb-4">Memebership Details</h4>
                       <div className="table-responsive">
                         <table className="table table-hover table-centered table-nowrap mb-0">
                           <thead>
@@ -99,61 +154,76 @@ const Memebership = (props) => {
                               <th scope="col"> No.</th>
                               <th scope="col">Name</th>
                               <th scope="col">Plan</th>
-                              <th scope="col">Joined Date</th>
+                              <th scope="col">Expiry</th>
                               <th scope="col">Status</th>
-                              <th scope="col" colSpan="4">
-                                Actions
-                              </th>
+                              <th scope="col">Total left messages</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr>
-                              <th scope="row">#14256</th>
+                              <th scope="row">
+                                {userProfile.memeberShipNumber}
+                              </th>
 
-                              <td>Mubarak</td>
-                              <td>FREE</td>
+                              <td>{userProfile.FullName}</td>
                               <td>
-                                <span className="badge bg-success">
-                                  05/08/2022
-                                </span>
+                                {userProfile.planType === "Free" ? (
+                                  <h4 className="badge bg-success">
+                                    {" "}
+                                    {userProfile.planType}
+                                  </h4>
+                                ) : (
+                                  <h4 className="badge bg-warning"> Premium</h4>
+                                )}
                               </td>
                               <td>
-                                <span className="badge bg-success">Active</span>
+                                <h4 className="badge bg-danger">
+                                  {moment(userProfile.PlanExpireDate).fromNow()}
+                                </h4>
                               </td>
                               <td>
-                                <div
-                                  style={{
-                                    // display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    width: 110,
-                                  }}
-                                >
-                                  <Button
-                                    color="primary"
-                                    size="sm"
-                                    style={{ width: 50, height: 30 }}
-                                  >
-                                    <i className="mdi mdi-pencil "></i>
-                                  </Button>
-
-                                  <Button
-                                    color="danger"
-                                    size="sm"
-                                    style={{
-                                      width: 50,
-                                      height: 30,
-                                      marginLeft: 5,
-                                    }}
-                                  >
-                                    <i className="mdi mdi-delete "></i>
-                                  </Button>
-                                </div>
+                                {userProfile.planStatus === "active" ? (
+                                  <h4 className="badge bg-success">
+                                    {userProfile.planStatus}
+                                  </h4>
+                                ) : (
+                                  <h4 className="badge bg-warning">
+                                    {userProfile.planStatus}
+                                  </h4>
+                                )}
+                              </td>
+                              <td>
+                                <h4>
+                                  {userProfile.planType === "Free"
+                                    ? 100 - userProfile.totalUsedMessage
+                                    : "∞"}
+                                </h4>
                               </td>
                             </tr>
                           </tbody>
                         </table>
                       </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </Col>
+            <Col className="col-12">
+              <Row>
+                <Col>
+                  <Card>
+                    <CardBody style={{ paddingTop: 30, paddingBottom: 50 }}>
+                      <h4 className="card-title mb-4">Subscribe</h4>
+                      <Container fluid>
+                        <Row>
+                          {pricings.map((pricing, key) => (
+                            <CardPricing
+                              pricing={pricing}
+                              key={"_pricing_" + key}
+                            />
+                          ))}
+                        </Row>
+                      </Container>
                     </CardBody>
                   </Card>
                 </Col>
@@ -166,26 +236,4 @@ const Memebership = (props) => {
   );
 };
 
-Memebership.propTypes = {
-  users: PropTypes.array,
-  className: PropTypes.string,
-  onGetUsers: PropTypes.func,
-  onAddNewUser: PropTypes.func,
-  onUpdateUser: PropTypes.func,
-  onDeleteUser: PropTypes.func,
-};
-
-const mapStateToProps = (state) => {
-  // const { users } = state.users;
-  const { error, isUserAuthenticated, loading } = state.isAuthUser;
-  return { error, isUserAuthenticated, loading };
-};
-
-/*const mapDispatchToProps = (dispatch) => ({
-  onGetUsers: () => dispatch(getUsers()),
-  onAddNewUser: (user) => dispatch(addNewUser(user)),
-  onUpdateUser: (user) => dispatch(updateUser(user)),
-  onDeleteUser: (user) => dispatch(deleteUser(user)),
-});*/
-
-export default connect(mapStateToProps, { isAuthUser, apiError })(Memebership);
+export default Memebership;
