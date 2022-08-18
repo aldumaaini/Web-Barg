@@ -9,9 +9,11 @@ import Account from "./auth/register/reducer";
 import ForgetPassword from "./auth/forgetpwd/reducer";
 import Profile from "./auth/profile/reducer";
 import isAuthUser from "./auth/userAuth/reducer";
-
+import MemberShip from "./memberShip/reducer";
 //users
 import Users from "./users/reducer";
+
+import Coupnes from "./coupons/reducer";
 
 const rootReducer = combineReducers({
   // public
@@ -22,6 +24,8 @@ const rootReducer = combineReducers({
   Profile,
   Users,
   isAuthUser,
+  Coupnes,
+  MemberShip,
 });
 
 export default rootReducer;

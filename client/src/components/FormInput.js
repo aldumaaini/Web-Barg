@@ -133,7 +133,7 @@ const FormInput = ({
                       className="form-check-label font-size-14"
                       for="remember-check"
                     >
-                      Remember me
+                      {label}
                     </Label>
                   </div>
                   {errors && errors[name] ? (

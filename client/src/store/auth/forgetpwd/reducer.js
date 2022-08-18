@@ -2,12 +2,19 @@ import {
   FORGET_PASSWORD,
   FORGET_PASSWORD_SUCCESS,
   FORGET_PASSWORD_ERROR,
-} from "./actionTypes"
+  NEW_PASSWORD,
+  NEW_PASSWORD_SUCCESS,
+  NEW_PASSWORD_ERROR,
+} from "./actionTypes";
 
 const initialState = {
   forgetSuccessMsg: null,
   forgetError: null,
-}
+  forgetPassLoading: false,
+  newPasswordSuccessMsg: null,
+  newPasswordError: null,
+  newPasswordPassLoading: false,
+};
 
 const forgetPassword = (state = initialState, action) => {
   switch (action.type) {
@@ -16,22 +23,52 @@ const forgetPassword = (state = initialState, action) => {
         ...state,
         forgetSuccessMsg: null,
         forgetError: null,
-      }
-      break
+        forgetPassLoading: true,
+      };
+      break;
+
+    case NEW_PASSWORD:
+      state = {
+        ...state,
+        newPasswordSuccessMsg: null,
+        newPasswordError: null,
+        newPasswordPassLoading: true,
+      };
+      break;
     case FORGET_PASSWORD_SUCCESS:
       state = {
         ...state,
         forgetSuccessMsg: action.payload,
-      }
-      break
-    case FORGET_PASSWORD_ERROR:
-      state = { ...state, forgetError: action.payload }
-      break
-    default:
-      state = { ...state }
-      break
-  }
-  return state
-}
+        forgetPassLoading: false,
+      };
+      break;
+    case NEW_PASSWORD_SUCCESS:
+      state = {
+        ...state,
+        newPasswordSuccessMsg: action.payload,
+        newPasswordPassLoading: false,
+      };
+      break;
 
-export default forgetPassword
+    case FORGET_PASSWORD_ERROR:
+      state = {
+        ...state,
+        forgetError: action.payload,
+        forgetPassLoading: false,
+      };
+      break;
+    case NEW_PASSWORD_ERROR:
+      state = {
+        ...state,
+        newPasswordError: action.payload,
+        newPasswordPassLoading: false,
+      };
+      break;
+    default:
+      state = { ...state };
+      break;
+  }
+  return state;
+};
+
+export default forgetPassword;

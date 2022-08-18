@@ -1,67 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import MetaTags from "react-meta-tags";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { isEmpty } from "lodash";
-import { Link } from "react-router-dom";
+import { useRedux } from "hooks";
 import { Col, Container, Row, Card, CardBody, Button } from "reactstrap";
-import Loader from "components/Loader";
-
-//Import Breadcrumb
-
 import Breadcrumbs from "components/Common/Breadcrumb";
-
-import {
-  /* addNewUser,
-  deleteUser,
-  getUsers,
-  updateUser,*/
-  isAuthUser,
-  apiError,
-} from "../../../store/actions";
-import DeleteModal from "./DeleteModal";
-//css
+import { getUsers } from "store/actions";
 
 const Loyalty = (props) => {
-  const [modal, setModal] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [event, setEvent] = useState({});
-  const [isEdit, setIsEdit] = useState(false);
+  const { dispatch, useAppSelector } = useRedux();
 
-  /*useEffect(() => {
-    if (!modal && !isEmpty(event) && !!isEdit) {
-      setTimeout(() => {
-        setEvent({});
-        setIsEdit(false);
-      }, 500);
-    }
-  }, [modal, event]);*/
+  const { users, success } = useAppSelector((state) => ({
+    error: state.Users.error,
+    users: state.Users.users,
+    message: state.Users.message,
+    loading: state.Users.loading,
+    success: state.Users.success,
+  }));
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(getUsers());
+    }, 100);
+  }, [success]);
 
-  /**
-   * Handling the modal state
-   */
-  const toggle = () => {
-    setModal(!modal);
-  };
-
-  /**
-   * On delete event
-   */
-  const handleAddNewUser = () => {};
-  const handleDeleteEvent = () => {
-    const { onDeleteEvent } = props;
-    onDeleteEvent(event);
-    setDeleteModal(false);
-    toggle();
-  };
+  const usersList = users?.map((i) => ({
+    userID: i.userID,
+    email: i.email,
+    FullName: i.FullName,
+    totalJoinedBy: users.filter((t) => t.referrer === i.code),
+  }));
 
   return (
     <React.Fragment>
-      <DeleteModal
-        show={deleteModal}
-        onDeleteClick={handleDeleteEvent}
-        onCloseClick={() => setDeleteModal(false)}
-      />
       <div className="page-content">
         <MetaTags>
           <title>Loyalty | Whatsapp Barg</title>
@@ -73,11 +41,7 @@ const Loyalty = (props) => {
               <Breadcrumbs
                 title="Whtasapp Barg"
                 breadcrumbItem="Loyalty"
-                buttonName="Create New user"
                 haveButton={false}
-                handleOnClick={() => {
-                  handleAddNewUser();
-                }}
               />
             </Row>
           </div>
@@ -100,15 +64,26 @@ const Loyalty = (props) => {
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <th scope="row">#14256</th>
+                            {users &&
+                              usersList.map((i, index) => (
+                                <tr key={index}>
+                                  <th scope="row">{i.userID}</th>
 
-                              <td>Mubarak</td>
-                              <td>akoma919@gmail.com</td>
-                              <td>
-                                <span className="badge bg-success">5</span>
-                              </td>
-                            </tr>
+                                  <td>{i.FullName}</td>
+                                  <td>{i.email}</td>
+                                  <td>
+                                    {i.totalJoinedBy.length > 0 ? (
+                                      <span className="badge bg-success">
+                                        {i.totalJoinedBy.length}
+                                      </span>
+                                    ) : (
+                                      <span className="badge bg-danger">
+                                        {i.totalJoinedBy.length}
+                                      </span>
+                                    )}
+                                  </td>
+                                </tr>
+                              ))}
                           </tbody>
                         </table>
                       </div>
@@ -124,26 +99,4 @@ const Loyalty = (props) => {
   );
 };
 
-Loyalty.propTypes = {
-  users: PropTypes.array,
-  className: PropTypes.string,
-  onGetUsers: PropTypes.func,
-  onAddNewUser: PropTypes.func,
-  onUpdateUser: PropTypes.func,
-  onDeleteUser: PropTypes.func,
-};
-
-const mapStateToProps = (state) => {
-  // const { users } = state.users;
-  const { error, isUserAuthenticated, loading } = state.isAuthUser;
-  return { error, isUserAuthenticated, loading };
-};
-
-/*const mapDispatchToProps = (dispatch) => ({
-  onGetUsers: () => dispatch(getUsers()),
-  onAddNewUser: (user) => dispatch(addNewUser(user)),
-  onUpdateUser: (user) => dispatch(updateUser(user)),
-  onDeleteUser: (user) => dispatch(deleteUser(user)),
-});*/
-
-export default connect(mapStateToProps, { isAuthUser, apiError })(Loyalty);
+export default Loyalty;

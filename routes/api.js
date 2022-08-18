@@ -2,8 +2,11 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const env = require("dotenv");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const { CON } = require("../utlis/dbCon");
 const { ResponseHandler } = require("../utlis/ResponseHandler");
+const jadeCompiler = require("../lib/jadeCompiler");
+const mailer = require("../lib/mailer");
 const { verifyJWT } = require("../utlis/auth");
 const shortid = require("shortid");
 const moment = require("moment");
@@ -17,7 +20,205 @@ const SECRETKEY = process.env.SECRETKEY || "";
 /* SIGN-UP router */
 //register-new-account
 router.post("/register-new-account", async function (req, res) {
+  const { name, phone, password, email, ReferralCode } = req.body;
+  const role = "user";
+  const saltRounds = 10;
+  const referral_code = shortid.generate();
+  const referrer = ReferralCode;
+  CON.query(
+    "SELECT COUNT(*) AS PhoneCount FROM users WHERE phone=?",
+    [phone],
+    async function (err, results) {
+      if (err) res.status(500).send(ResponseHandler(500, null, null));
+      else {
+        var phoneCount = results[0].PhoneCount;
+        if (phoneCount === 1) {
+          res
+            .status(404)
+            .send(
+              ResponseHandler(404, null, "This phone number already registred")
+            );
+        } else {
+          CON.query(
+            "SELECT COUNT(*) AS EmailCount FROM users WHERE email=?",
+            [email],
+            async function (err, results) {
+              if (err) res.status(500).send(ResponseHandler(500, null, null));
+              else {
+                var emailCount = results[0].EmailCount;
+                if (emailCount === 1) {
+                  res
+                    .status(404)
+                    .send(
+                      ResponseHandler(
+                        404,
+                        null,
+                        "This Email address already registred"
+                      )
+                    );
+                } else {
+                  bcrypt.hash(
+                    password,
+                    saltRounds,
+                    function (err, hashedPassword) {
+                      if (err)
+                        res.status(500).send(ResponseHandler(500, null, null));
+                      else {
+                        CON.query(
+                          "INSERT INTO users( FullName,role,email, password,phone,code, referrer)VALUES(?,?,?,?,?,?,?)",
+                          [
+                            name,
+                            role,
+                            email,
+                            hashedPassword,
+                            phone,
+                            referral_code,
+                            referrer,
+                          ],
+                          function (err, results) {
+                            if (err)
+                              res
+                                .status(500)
+                                .send(ResponseHandler(500, null, null));
+                            else {
+                              if (results.affectedRows > 0) {
+                                let userId = results.insertId;
+                                let ExpireDate = moment()
+                                  .add(7, "days")
+                                  .format("YYYY-MM-DD");
+
+                                let memeberShipNumber = `6565${Math.floor(
+                                  100000 + Math.random() * 900000000000
+                                )}`;
+
+                                CON.query(
+                                  "INSERT INTO userPlan( userId,planType,PlanExpireDate, planStatus,totalUsedMessage,memeberShipNumber)VALUES(?,?,?,?,?,?)",
+                                  [
+                                    userId,
+                                    "Free",
+                                    ExpireDate,
+                                    "active",
+                                    0,
+                                    memeberShipNumber,
+                                  ],
+                                  function (err, results) {
+                                    if (err)
+                                      res
+                                        .status(500)
+                                        .send(ResponseHandler(500, null, null));
+                                    else {
+                                      CON.query(
+                                        "INSERT INTO usersReferrals( userReferredToId,userRefferedFromCode)VALUES(?,?)",
+                                        [userId, referrer]
+                                      );
+                                      res
+                                        .status(200)
+                                        .send(
+                                          ResponseHandler(
+                                            200,
+                                            null,
+                                            "successfull"
+                                          )
+                                        );
+                                    }
+                                  }
+                                );
+                              }
+                            }
+                          }
+                        );
+                      }
+                    }
+                  );
+                }
+              }
+            }
+          );
+        }
+      }
+    }
+  );
+});
+
+/* 
+export const GET_COUPONE = "/coupons-admin";
+export const ADD_NEW_COUPONE = "/add-new-coupons-admin";
+export const DELETE_COUPONE = "/delete-coupons-admin";
+*/
+
+router.get("/coupons-admin", verifyJWT, async function (req, res) {
+  // const { id } = req.body;
+
+  CON.query("SELECT * FROM Coupons", function (err, results) {
+    if (err) res.status(500).send(ResponseHandler(500, null, null));
+    else {
+      res.status(200).send(ResponseHandler(200, results, "successfull"));
+    }
+  });
+});
+
+//dd-new-coupons-admin
+router.post("/add-new-coupons-admin", verifyJWT, async function (req, res) {
+  const { name, description, numofuse, expire, type, percentage, fixedamount } =
+    req.body;
+
+  CON.query(
+    "INSERT INTO Coupons( name,description,numOfUse, expire,type,percentage, fixedAmount)VALUES(?,?,?,?,?,?,?)",
+    [name, description, numofuse, expire, type, percentage, fixedamount],
+    function (err, results) {
+      if (err) res.status(500).send(ResponseHandler(500, null, null));
+      else {
+        if (results.affectedRows > 0) {
+          let data = {
+            description: description,
+            expire: expire,
+            fixedAmount: fixedamount,
+            id: results.insertId,
+            name: name,
+            numOfUse: numofuse,
+            percentage: percentage,
+            type: type,
+          };
+          res.status(200).send(ResponseHandler(200, data, "successfull"));
+        }
+      }
+    }
+  );
+});
+
+//delete-coupone-admin
+router.delete("/delete-coupons-admin", verifyJWT, async function (req, res) {
+  const { id } = req.headers;
+
+  CON.query("DELETE FROM Coupons WHERE id=?", [id], function (err, results) {
+    if (err) res.status(500).send(ResponseHandler(500, null, null));
+    else {
+      res.status(200).send(ResponseHandler(200, id, "successfull"));
+    }
+  });
+});
+
+// get-users admin
+
+router.get("/users-admin", verifyJWT, async function (req, res) {
+  // const { id } = req.body;
+
+  CON.query(
+    "SELECT u.id AS userID,u.email,u.role,u.isPhoneVerified,u.code, u.FullName,u.phone,u.referrer,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.role=? ",
+    "user",
+    function (err, results) {
+      if (err) res.status(500).send(ResponseHandler(500, null, null));
+      else {
+        res.status(200).send(ResponseHandler(200, results, "successfull"));
+      }
+    }
+  );
+});
+
+//add-new-user-admin
+router.post("/add-new-user-admin", verifyJWT, async function (req, res) {
   const { name, phone, password, email } = req.body;
+
   const role = "user";
   const saltRounds = 10;
   const referral_code = shortid.generate();
@@ -117,16 +318,50 @@ router.post("/register-new-account", async function (req, res) {
     }
   );
 });
+//update-user-admin
+router.put("/update-user-admin", verifyJWT, async function (req, res) {
+  const {
+    id,
+    fullname,
+    email,
+    phone,
+    isPhoneVerified,
+    planType,
+    PlanExpireDate,
+    planStatus,
+  } = req.body;
 
-router.get("/welcome", function (req, res) {
-  res.status(200).send(ResponseHandler(200, { hi: "Hi" }, "success"));
+  CON.query(
+    "UPDATE users SET FullName=? , email=?, phone=?, isPhoneVerified=? WHERE id=?",
+    [fullname, email, phone, isPhoneVerified, id],
+    function (err, results) {
+      if (err) res.status(500).send(ResponseHandler(500, null, null));
+      else {
+        CON.query(
+          "UPDATE userPlan SET planType=? , PlanExpireDate=?, planStatus=? WHERE userId=?",
+          [planType, PlanExpireDate, planStatus, id]
+        );
+        res.status(200).send(ResponseHandler(200, null, "successfull"));
+      }
+    }
+  );
 });
+//delete-user-admin
+router.delete("/delete-user-admin", verifyJWT, async function (req, res) {
+  const { id } = req.headers;
 
+  CON.query("DELETE FROM users WHERE id=?", [id], function (err, results) {
+    if (err) res.status(500).send(ResponseHandler(500, null, null));
+    else {
+      res.status(200).send(ResponseHandler(200, id, "successfull"));
+    }
+  });
+});
 /* LOGIN - router */
 router.post("/loginDashboard", function (req, res) {
   const { email, password } = req.body;
   CON.query(
-    "SELECT u.id AS userID, u.password,u.email,u.role,u.isPhoneVerified,u.code, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.email = ?",
+    "SELECT u.id AS userID, u.password,u.email,u.role,u.isPhoneVerified,u.code, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage,up.memeberShipNumber FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.email = ?",
     [email],
     async function (err, Results) {
       if (err) {
@@ -144,6 +379,7 @@ router.post("/loginDashboard", function (req, res) {
           let planType = Results[0].planType;
           let PlanExpireDate = Results[0].PlanExpireDate;
           let totalUsedMessage = Results[0].totalUsedMessage;
+          let memeberShipNumber = Results[0].memeberShipNumber;
           let planStatus = Results[0].planStatus;
           const match = await bcrypt.compare(password, userPassword);
           if (match) {
@@ -164,6 +400,7 @@ router.post("/loginDashboard", function (req, res) {
                 PlanExpireDate, // plan expiry date
                 totalUsedMessage, // this to track sent messages
                 planStatus, // either active or unactive
+                memeberShipNumber,
               },
             };
 
@@ -192,7 +429,7 @@ router.post("/loginDashboard", function (req, res) {
 router.post("/login", function (req, res) {
   const { mobile, password } = req.body;
   CON.query(
-    "SELECT u.id AS userID, u.password,u.email, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.phone = ?",
+    "SELECT u.id AS userID, u.password,u.email,u.isPhoneVerified, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage,up.memeberShipNumber FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.phone = ?",
     [mobile],
     async function (err, Results) {
       if (err) {
@@ -208,6 +445,8 @@ router.post("/login", function (req, res) {
           let PlanExpireDate = Results[0].PlanExpireDate;
           let totalUsedMessage = Results[0].totalUsedMessage;
           let planStatus = Results[0].planStatus;
+          let isPhoneVerified = Results[0].isPhoneVerified;
+          let memeberShipNumber = Results[0].memeberShipNumber;
           const match = await bcrypt.compare(password, userPassword);
           if (match) {
             const token = jwt.sign({ userID: userID }, SECRETKEY, {
@@ -219,11 +458,13 @@ router.post("/login", function (req, res) {
                 userId: userID,
                 FullName,
                 email,
+                isPhoneVerified,
                 phone,
                 planType, // plan type either Free or premiume
                 PlanExpireDate, // plan expiry date
                 totalUsedMessage, // this to track sent messages
                 planStatus, // either active or unactive
+                memeberShipNumber,
               },
             };
 
@@ -255,7 +496,7 @@ router.get("/isValidUser", verifyJWT, (req, res) => {
   const token = req.headers["x-auth-token"];
 
   CON.query(
-    "SELECT u.id AS userID,u.role, u.password,u.email,u.isPhoneVerified,u.code, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.id = ?",
+    "SELECT u.id AS userID,u.role, u.password,u.email,u.isPhoneVerified,u.code, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage, up.memeberShipNumber FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.id = ?",
     req.user,
     (err, user) => {
       if (err) return res.status(500).send(ResponseHandler(500, null, null));
@@ -272,6 +513,7 @@ router.get("/isValidUser", verifyJWT, (req, res) => {
           let PlanExpireDate = user[0].PlanExpireDate;
           let totalUsedMessage = user[0].totalUsedMessage;
           let planStatus = user[0].planStatus;
+          let memeberShipNumber = user[0].memeberShipNumber;
           let userData = {
             token: token,
             user: {
@@ -286,8 +528,10 @@ router.get("/isValidUser", verifyJWT, (req, res) => {
               PlanExpireDate, // plan expiry date
               totalUsedMessage, // this to track sent messages
               planStatus, // either active or unactive
+              memeberShipNumber,
             },
           };
+
           return res
             .status(200)
             .send(ResponseHandler(200, userData, "successfull"));
@@ -394,26 +638,46 @@ router.get("/UserPlanValidation", verifyJWT, (req, res) => {
           let isExpiryInthePast = moment(planExDate).isBefore(today);
           let PlanStatus = status;
           let response;
-          if (isExpiryInthePast) {
-            response = { info: "Expired", code: 100, planType };
-            return res
-              .status(403)
-              .send(ResponseHandler(403, response, "not valid"));
-          } else if (PlanStatus !== "active") {
-            response = { info: "Not active", code: 101, planType };
-            return res
-              .status(403)
-              .send(ResponseHandler(403, response, "not valid"));
-          } else if (planType === "Free" && totalUsedMessage >= 100) {
-            response = { info: "Trial ended", code: 102, planType };
-            return res
-              .status(403)
-              .send(ResponseHandler(403, response, "not valid"));
+
+          if (planType === "Free") {
+            if (isExpiryInthePast) {
+              response = { info: "Expired", code: 100, planType };
+              return res
+                .status(403)
+                .send(ResponseHandler(403, response, "not valid"));
+            } else if (PlanStatus !== "active") {
+              response = { info: "Not active", code: 101, planType };
+              return res
+                .status(403)
+                .send(ResponseHandler(403, response, "not valid"));
+            } else if (totalUsedMessage >= 100) {
+              response = { info: "Trial ended", code: 102, planType };
+              return res
+                .status(403)
+                .send(ResponseHandler(403, response, "not valid"));
+            } else {
+              response = { info: "active", totalUsedMessage, planType };
+              return res
+                .status(200)
+                .send(ResponseHandler(200, response, "valid"));
+            }
           } else {
-            response = { info: "active", totalUsedMessage, planType };
-            return res
-              .status(200)
-              .send(ResponseHandler(200, response, "valid"));
+            if (isExpiryInthePast) {
+              response = { info: "Expired", code: 100, planType };
+              return res
+                .status(403)
+                .send(ResponseHandler(403, response, "not valid"));
+            } else if (PlanStatus !== "active") {
+              response = { info: "Not active", code: 101, planType };
+              return res
+                .status(403)
+                .send(ResponseHandler(403, response, "not valid"));
+            } else {
+              response = { info: "active", totalUsedMessage, planType };
+              return res
+                .status(200)
+                .send(ResponseHandler(200, response, "valid"));
+            }
           }
         } else {
           return res.status(400).send(ResponseHandler(400, null, null));
@@ -470,26 +734,28 @@ router.post("/UpdateSentMessagesCount", verifyJWT, (req, res) => {
 });
 /* forgot password */
 
-router.post("/forgot-password", function (req, res) {
+router.post("/password-reset", function (req, res) {
+  const email = req.body.email;
   const phone = req.body.phone;
 
   CON.query(
-    "SELECT * FROM users WHERE phone = ?",
-    [phone],
+    "SELECT email FROM users WHERE phone = ? OR email=?",
+    [phone, email],
     async function (err, phoneCountResults) {
       if (err) {
         return res.status(500).send(ResponseHandler(500, null, null));
       } else {
         if (phoneCountResults.length !== 0) {
-          const email = phoneCountResults[0].email;
+          const emailAddess = phoneCountResults[0].email;
+
           const token = crypto.randomBytes(20).toString("hex");
           const hashId = crypto.randomBytes(20).toString("hex");
           const expires = moment().add(1, "d").format();
           let saltRounds = 10;
           const hasedToken = await bcrypt.hash(token, saltRounds);
           CON.query(
-            "INSERT INTO PasswordReset(hashId,email,token,expires) VALUES (?,?,?,?,?) ",
-            [hashId, email, role, hasedToken, expires],
+            "INSERT INTO PasswordReset(hashId,email,token,expires) VALUES (?,?,?,?) ",
+            [hashId, emailAddess, hasedToken, expires],
             async function (err, Results) {
               if (err) {
                 return res.status(500).send(ResponseHandler(500, null, null));
@@ -498,46 +764,54 @@ router.post("/forgot-password", function (req, res) {
                   const RELATIVE_TEMPLATE_PATH = "reset";
                   // get compiled template first
                   var data = {
-                    url: `https://localhost/reset/${hashId}`,
+                    url: `https://localhost/change-password/${hashId}`,
                   };
 
                   jadeCompiler.compile(
                     RELATIVE_TEMPLATE_PATH,
                     data,
                     function (err, html) {
-                      if (err) {
-                        res.send({
-                          auth: false,
-                          message: "Unable to reset password",
-                        });
-                      }
                       mailer.sendMail(
-                        "info@test.com",
-                        email,
+                        "akoma919@gmail.com",
+                        emailAddess,
                         "Password Reset",
                         html,
                         function (err, success) {
                           if (err) {
-                            res.send({
-                              auth: false,
-                              message: "Unable to reset password",
-                            });
+                            res
+                              .status(503)
+                              .send(
+                                ResponseHandler(
+                                  503,
+                                  "Unable to reset password",
+                                  "Unable to reset password"
+                                )
+                              );
                           } else {
-                            res.send({
-                              auth: true,
-                              message:
-                                "Password reset insturction sent to your email",
-                            });
+                            return res
+                              .status(200)
+                              .send(
+                                ResponseHandler(
+                                  200,
+                                  "Password reset insturction sent to your email",
+                                  "success"
+                                )
+                              );
                           }
                         }
                       );
                     }
                   );
                 } else {
-                  res.send({
-                    auth: false,
-                    message: "Unable to reset password",
-                  });
+                  res
+                    .status(503)
+                    .send(
+                      ResponseHandler(
+                        503,
+                        "Unable to reset password",
+                        "Unable to reset password"
+                      )
+                    );
                 }
               }
             }
@@ -549,7 +823,7 @@ router.post("/forgot-password", function (req, res) {
               ResponseHandler(
                 404,
                 null,
-                "No account associated with this phone number"
+                "No account associated with this email / phone number"
               )
             );
         }
@@ -561,65 +835,76 @@ router.post("/forgot-password", function (req, res) {
 /* new-password - router */
 
 router.post("/new-password", (req, res) => {
-  const newPassword = req.body.password;
+  const newPassword = req.body.newPassword;
   const sentToken = req.body.token;
-  if (newPassword !== null || newPassword !== "") {
-    CON.query(
-      "SELECT * FROM PasswordReset WHERE token = ? ",
-      [sentToken],
-      function (err, Results) {
-        if (err) {
-          res.send({ error: "server error 500" });
-        } else {
-          if (Results.length > 0) {
-            var result = Results[0];
-            var expires = Results[0].expires;
-            var current = moment().format();
-            let compare = moment(current).isBefore(expires);
 
-            var email = Results[0].email;
-            if (result !== 0) {
-              let sql = `DELETE FROM PasswordReset WHERE email = ?`;
-              CON.query(sql, email, (error, results) => {
-                if (error) {
-                  return res.send({ error: "server error 500" });
-                }
-              });
-              if (compare == true) {
-                var saltRounds = 10;
+  CON.query(
+    "SELECT * FROM PasswordReset WHERE hashId = ? ",
+    [sentToken],
+    function (err, Results) {
+      if (err) {
+        return res.status(500).send(ResponseHandler(500, null, null));
+      } else {
+        if (Results.length > 0) {
+          var expires = Results[0].expires;
+          var current = moment().format();
+          let compare = moment(current).isBefore(expires);
 
-                bcrypt.hash(newPassword, saltRounds, function (err, myHash) {
-                  CON.query(
-                    "UPDATE `customers` SET password=? WHERE email =?",
-                    [myHash, email],
-                    function (err, insertResults) {
-                      if (err) {
-                        res.send({ error: "server error 500" });
-                      } else {
-                        res.send({
-                          message: "Password has been reset",
-                        });
-                      }
-                    }
-                  );
-                });
-              } else {
-                res.send({
-                  error: "Reset request has been expired, request a new one.",
-                });
-              }
-            } else {
-              res.send({ error: "Invalid request, try again " });
+          var email = Results[0].email;
+
+          let sql = `DELETE FROM PasswordReset WHERE email = ?`;
+          CON.query(sql, email, (error, results) => {
+            if (error) {
+              return res.status(500).send(ResponseHandler(500, null, null));
             }
+          });
+          if (compare == true) {
+            var saltRounds = 10;
+
+            bcrypt.hash(newPassword, saltRounds, function (err, myHash) {
+              CON.query(
+                "UPDATE `users` SET password=? WHERE email =?",
+                [myHash, email],
+                function (err, insertResults) {
+                  if (err) {
+                    return res
+                      .status(500)
+                      .send(ResponseHandler(500, null, null));
+                  } else {
+                    return res
+                      .status(200)
+                      .send(
+                        ResponseHandler(
+                          200,
+                          "Password reset successfully",
+                          "success"
+                        )
+                      );
+                  }
+                }
+              );
+            });
           } else {
-            res.send({ error: "Invalid request, try again " });
+            return res
+              .status(403)
+              .send(
+                ResponseHandler(
+                  403,
+                  "Reset request has been expired, request a new one.",
+                  "not valid"
+                )
+              );
           }
+        } else {
+          return res
+            .status(403)
+            .send(
+              ResponseHandler(403, "Invalid request, try again", "not valid")
+            );
         }
       }
-    );
-  } else {
-    res.send({ error: "Invalid request, try again 3" });
-  }
+    }
+  );
 });
 
 /*

@@ -20,14 +20,16 @@ const getActiveUser = isUserAuthenticated();
 // Register Method
 const postRegister = (data) => post(url.POST_REGISTER, data);
 
+const getMemberShipValidation = () => get(url.MEMBERSHIP_VALIDATION);
 // Login Method
 const postLogin = (data) => post(url.POST_LOGIN, data);
 
 // postForgetPwd
 const postForgetPwd = (data) => post(url.POST_FORGOT_PASSWORD, data);
 
-// Edit profile
-const postJwtProfile = (data) => post(url.POST_EDIT_JWT_PROFILE, data);
+//postnewpassword
+
+const postNewPassword = (data) => post(url.POST_NEW_PASSWORD, data);
 
 const postProfileEmail = (data) => post(url.POST_EDIT_PROFILE_EMAIL, data);
 const postProfilePassword = (data) =>
@@ -37,22 +39,27 @@ const postProfileVerifyPhone = (data) =>
 
 // Login Method
 
-// postForgetPwd
-const postJwtForgetPwd = (data) =>
-  post(url.POST_FAKE_JWT_PASSWORD_FORGET, data);
-
 // get Users
-export const getUsers = () => get(url.GET_EVENTS);
+export const getUsers = () => get(url.GET_USERS);
 
 // add Users
-export const addNewUser = (event) => post(url.ADD_NEW_EVENT, event);
+export const addNewUser = (user) => post(url.ADD_NEW_USER, user);
 
 // update User
-export const updateUser = (event) => put(url.UPDATE_EVENT, event);
+export const updateUser = (user) => put(url.UPDATE_USER, user);
 
 // delete User
-export const deleteUser = (event) =>
-  del(url.DELETE_EVENT, { headers: { event } });
+export const deleteUser = (id) => del(url.DELETE_USER, { headers: { id } });
+
+// get getCoupones
+export const getCoupones = () => get(url.GET_COUPONE);
+
+// add addNewCoupone
+export const addNewCoupone = (coupone) => post(url.ADD_NEW_COUPONE, coupone);
+
+// delete deleteCoupone
+export const deleteCoupone = (id) =>
+  del(url.DELETE_COUPONE, { headers: { id } });
 
 // get Categories
 export const getCategories = () => get(url.GET_CATEGORIES);
@@ -66,7 +73,7 @@ export {
   postProfilePassword,
   postProfileVerifyPhone,
   postForgetPwd,
-  postJwtForgetPwd,
-  postJwtProfile,
   getActiveUser,
+  getMemberShipValidation,
+  postNewPassword,
 };

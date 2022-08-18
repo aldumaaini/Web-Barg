@@ -6907,6 +6907,13 @@ globals@^13.6.0, globals@^13.9.0:
   dependencies:
     type-fest "^0.20.2"
 
+globalthis@^1.0.2:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/globalthis/-/globalthis-1.0.3.tgz#5852882a52b80dc301b0660273e1ed082f0b6ccf"
+  integrity sha512-sFdI5LyBiNTHjRd7cGPWapiHWMOXKyuBNX/cWJ3NfzrZQVa8GI/8cofCl74AOVqq9W5kNmguTIzJ/1s2gyI9wA==
+  dependencies:
+    define-properties "^1.1.3"
+
 globby@11.0.1:
   version "11.0.1"
   resolved "https://registry.yarnpkg.com/globby/-/globby-11.0.1.tgz#9a2bf107a068f3ffeabc49ad702c79ede8cfd357"
@@ -10296,6 +10303,14 @@ path-type@^4.0.0:
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
 
+payment@^2.3.0, payment@^2.4.6:
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/payment/-/payment-2.4.6.tgz#a69bfae5ee6edb2210d8c9f7720ee702359a40f5"
+  integrity sha512-QSCAa1yQSkqbe4Ghac3sSA5SQ+Cxc3e4xwCxxun5NT6hUSWsNXXlN8KCCY0kAFFXBP9C7DrfyXP4REB7nPJa8g==
+  dependencies:
+    globalthis "^1.0.2"
+    qj "~2.0.0"
+
 pbkdf2@^3.0.3:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/pbkdf2/-/pbkdf2-3.1.2.tgz#dd822aa0887580e52f1a039dc3eda108efae3075"
@@ -11334,6 +11349,11 @@ q@^1.1.2:
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==
 
+qj@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/qj/-/qj-2.0.0.tgz#054dd3b75ce018728d23a0605f030dfda0bd158a"
+  integrity sha512-8466vlnAF/piI42tzMBUfhaAWn2yBNPOLSSbA2YBlEh+S8CxBXbAO1AwuDReGKYX6LlsK19wBL9cpXZGlgsXxA==
+
 qs@6.10.3:
   version "6.10.3"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.10.3.tgz#d6cde1b2ffca87b5aa57889816c5f81535e22e8e"
@@ -11889,7 +11909,7 @@ react-bootstrap@^2.5.0-beta.1:
     uncontrollable "^7.2.1"
     warning "^4.0.3"
 
-react-calendar@^3.3.1:
+react-calendar@^3.3.1, react-calendar@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/react-calendar/-/react-calendar-3.7.0.tgz#951d56e91afb33b1c1e019cb790349fbffcc6894"
   integrity sha512-zkK95zWLWLC6w3O7p3SHx/FJXEyyD2UMd4jr3CrKD+G73N+G5vEwrXxYQCNivIPoFNBjqoyYYGlkHA+TBDPLCw==
@@ -11944,12 +11964,24 @@ react-cookie@2.1.4:
     prop-types "^15.0.0"
     universal-cookie "^2.1.2"
 
+react-countdown-circle-timer@^3.0.9:
+  version "3.0.9"
+  resolved "https://registry.yarnpkg.com/react-countdown-circle-timer/-/react-countdown-circle-timer-3.0.9.tgz#9bdf127c63f9c67dc12bc83cb8029765512b1f5f"
+  integrity sha512-2rE2NklqgtArbvM9RVR3NctiKQ8+lY8PEjUZ2S1pKowD8CmaXUGqIaCbFBcygYH2aZQs9qPIQA49Z+9Jc2TOiQ==
+
 react-countdown@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/react-countdown/-/react-countdown-2.3.2.tgz#4cc27f28f2dcd47237ee66e4b9f6d2a21fc0b0ad"
   integrity sha512-Q4SADotHtgOxNWhDdvgupmKVL0pMB9DvoFcxv5AzjsxVhzOVxnttMbAywgqeOdruwEAmnPhOhNv/awAgkwru2w==
   dependencies:
     prop-types "^15.7.2"
+
+react-credit-cards@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/react-credit-cards/-/react-credit-cards-0.8.3.tgz#608a8ee8bf3a88857fc83023ffba1ad536ba8c7e"
+  integrity sha512-88XJErkkdDjeFevOxfWYV2dUs4ddNNXJMIgutqTlUH2pYfcaDeFv9MXNGCcJKvBv4+6GEnxbCToymNRNbEt/uw==
+  dependencies:
+    payment "^2.3.0"
 
 react-cropper@^2.1.7:
   version "2.1.8"

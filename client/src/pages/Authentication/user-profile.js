@@ -26,7 +26,7 @@ import { editProfileEmail, editProfilePassword } from "store/actions";
 import SuccessModal from "common/successModal";
 import Breadcrumb from "../../components/Common/Breadcrumb";
 
-import avatar from "../../assets/images/users/avatar-10.png";
+import avatar from "../../assets/images/avatar-10.png";
 // actions
 
 const UserProfile = (props) => {

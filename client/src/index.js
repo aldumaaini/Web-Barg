@@ -16,3 +16,4 @@ const app = (
 );
 
 ReactDOM.render(app, document.getElementById("root"));
+//document.getElementsByTagName("html")[0].setAttribute("dir", "rtl");

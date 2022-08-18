@@ -15,12 +15,12 @@ import {
   getUsers,
   updateUser,
 } from "../../../store/actions";
-import DeleteModal from "./DeleteModal";
+
 //css
 
 const Transcations = (props) => {
   const [modal, setModal] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
+
   const [event, setEvent] = useState({});
 
   const [isEdit, setIsEdit] = useState(false);
@@ -34,31 +34,10 @@ const Transcations = (props) => {
     }
   }, [modal, event]);
 
-  /**
-   * Handling the modal state
-   */
-  const toggle = () => {
-    setModal(!modal);
-  };
-
-  /**
-   * On delete event
-   */
   const handleAddNewUser = () => {};
-  const handleDeleteEvent = () => {
-    const { onDeleteEvent } = props;
-    onDeleteEvent(event);
-    setDeleteModal(false);
-    toggle();
-  };
 
   return (
     <React.Fragment>
-      <DeleteModal
-        show={deleteModal}
-        onDeleteClick={handleDeleteEvent}
-        onCloseClick={() => setDeleteModal(false)}
-      />
       <div className="page-content">
         <MetaTags>
           <title>Transactions | Whatsapp Barg</title>

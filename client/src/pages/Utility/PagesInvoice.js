@@ -1,24 +1,27 @@
-import React from "react"
-import MetaTags from 'react-meta-tags';
-import { Row, Card, CardBody, Container } from "reactstrap"
-import { Link } from "react-router-dom"
+import React from "react";
+import MetaTags from "react-meta-tags";
+import { Row, Card, CardBody, Container } from "reactstrap";
+import { Link } from "react-router-dom";
 
 //Import Breadcrumb
-import Breadcrumbs from "../../components/Common/Breadcrumb"
+import Breadcrumbs from "../../components/Common/Breadcrumb";
 
 import logoSm from "../../assets/images/logo-sm.png";
 
 const PagesInvoice = () => {
-
   return (
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>Invoice | Veltrix - Responsive Bootstrap 5 Admin Dashboard</title>
+          <title>Invoice </title>
         </MetaTags>
         <Container fluid>
           {/* Render Breadcrumbs */}
-          <Breadcrumbs maintitle="Veltrix" title="Extra Pages" breadcrumbItem="Invoice" />
+          <Breadcrumbs
+            maintitle="Veltrix"
+            title="Extra Pages"
+            breadcrumbItem="Invoice"
+          />
           <Row>
             <div className="col-12">
               <Card>
@@ -194,7 +197,6 @@ const PagesInvoice = () => {
       </div>
     </React.Fragment>
   );
-
-}
+};
 
 export default PagesInvoice;

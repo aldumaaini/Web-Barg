@@ -119,6 +119,12 @@ const SidebarContent = (props) => {
                 <span>{props.t("Loaylty")}</span>
               </Link>
             </li>
+            <li>
+              <Link to="/coupons-admin" className=" waves-effect">
+                <i className="ti-credit-card"></i>
+                <span>{"Coupons"}</span>
+              </Link>
+            </li>
 
             {/* <li>
               <Link to="/#" className="has-arrow waves-effect">

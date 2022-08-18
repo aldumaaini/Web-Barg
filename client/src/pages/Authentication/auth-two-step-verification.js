@@ -8,8 +8,7 @@ import { Redirect, useHistory } from "react-router-dom";
 import { Card, CardBody, Col, Container, Alert, Button, Row } from "reactstrap";
 import { firebase, auth } from "helpers/firebase";
 import { editProfileVerifyPhone } from "store/actions";
-// import images
-import logo from "../../assets/logo.png";
+import Loader from "components/Loader";
 import { useProfile, useRedux } from "hooks";
 
 const TwostepVerification = () => {
@@ -119,7 +118,7 @@ const TwostepVerification = () => {
                               allowedCharacters="^[0-9]"
                               onChange={handleOnCodeChange}
                               inputStyle={{
-                                width: "76px",
+                                width: "50px",
                                 height: "42px",
                                 padding: "8px",
                                 borderRadius: "8px",
@@ -133,7 +132,14 @@ const TwostepVerification = () => {
                           </Row>
                         ) : (
                           <div className="text-center mt-4">
-                            <div id="recaptcha-container"></div>
+                            <div
+                              id="recaptcha-container"
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            ></div>
                             {isLoading ? null : (
                               <Button
                                 type="submit"

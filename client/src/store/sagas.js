@@ -7,17 +7,21 @@ import ForgetSaga from "./auth/forgetpwd/saga";
 import ProfileSaga from "./auth/profile/saga";
 import LayoutSaga from "./layout/saga";
 import usersSaga from "./users/saga";
+import couponesSaga from "./coupons/saga";
 import isAuthSaga from "./auth/userAuth/saga";
+import memberShipSaga from "./memberShip/saga";
 
 export default function* rootSaga() {
   yield all([
     //public
     AccountSaga(),
     isAuthSaga(),
+    memberShipSaga(),
     fork(AuthSaga),
     fork(ProfileSaga),
     ForgetSaga(),
     LayoutSaga(),
     fork(usersSaga),
+    fork(couponesSaga),
   ]);
 }
