@@ -10,6 +10,7 @@ import { firebase, auth } from "helpers/firebase";
 import { editProfileVerifyPhone } from "store/actions";
 import Loader from "components/Loader";
 import { useProfile, useRedux } from "hooks";
+import { useTranslation } from "react-i18next";
 
 const TwostepVerification = () => {
   const { userProfile } = useProfile();
@@ -69,12 +70,13 @@ const TwostepVerification = () => {
         setIsLoading(false);
       });
   };
+  const { t } = useTranslation();
 
   return (
     <React.Fragment>
       <div className="account-pages my-5 pt-sm-5">
         <MetaTags>
-          <title>OTP Verification</title>
+          <title>{t ('OTP Verification')}</title>
         </MetaTags>
         <Container>
           <Row className="justify-content-center">
@@ -89,7 +91,7 @@ const TwostepVerification = () => {
                         </div>
                       </div>
                       <div className="p-2 mt-4">
-                        <h4>Verify your phone number</h4>
+                        <h4>{t ('Verify your phone number')}</h4>
                         {error && <Alert color="danger">{error}</Alert>}
                         {isCodeSent ? (
                           <p className="mb-5">
