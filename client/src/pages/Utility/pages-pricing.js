@@ -3,38 +3,44 @@ import { Container, Row } from "reactstrap";
 import MetaTags from "react-meta-tags";
 
 import CardPricing from "./card-pricing";
+import { useTranslation } from 'react-i18next';
+import "./utility.css";
+
+
+
 
 const PagesPricing = () => {
+  const { t, i18n } = useTranslation();
+
   const pricings = [
     {
       id: 1,
-      title: "FREE",
-      description: "free trial plan ",
+      title:  t('FREE'),
+      description: t('free trial plan'),
       icon: "ion ion-ios-gift",
-      buttonTitle: "TRY IT FREE",
-      price: "0",
-      duration: "Per month",
+      buttonTitle:t("TRY IT FREE"), 
+      price: t('0.00'),
+      duration: t("Per month"),
       link: "",
       features: [
-        { icon: "mdi mdi-check", title: "Free 100 messages" },
-        { icon: "mdi mdi-check", title: "One month" },
-
-        { icon: "mdi mdi-close", title: "24/7 Support" },
+        { icon: "mdi mdi-check", title: t("Free 100 messages")},
+        { icon: "mdi mdi-check", title: t("One month") },
+        { icon: "mdi mdi-close", title: t("24/7 Support") },
       ],
     },
     {
       id: 2,
-      title: "PREMIUM",
-      description: "Premium plan with unlimited features",
-      buttonTitle: "SUBSCRIBE",
+      title: t('PREMIUM'),
+      description:t('Premium plan with unlimited features'),
+      buttonTitle:t('SUBSCRIBE'),
       icon: "ion ion-ios-trophy",
       price: "100",
-      duration: "Per month",
+      duration: t("Per month"),
       link: "",
       features: [
-        { icon: "mdi mdi-check", title: "+6000 messages" },
-        { icon: "mdi mdi-check", title: "One month" },
-        { icon: "mdi mdi-check", title: "24/7 Support" },
+        { icon: "mdi mdi-check", title: t("6000 messages") },
+        { icon: "mdi mdi-check", title: t("Per month"),},
+        { icon: "mdi mdi-check", title: t("24/7 Support")  },
       ],
     },
   ];
@@ -42,7 +48,7 @@ const PagesPricing = () => {
     <React.Fragment>
       <div>
         <MetaTags>
-          <title>Pricing</title>
+          <title>{t(" Pricing")}</title>
         </MetaTags>
         <Container fluid>
           <Row>

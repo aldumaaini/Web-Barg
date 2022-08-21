@@ -3,42 +3,39 @@ import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import { AiOutlineMail } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import "./FooterStyles.css";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const [t, i18n] = useTranslation();
   return (
     <div className="footer">
       <div className="container">
         <div className="col solutions">
-          <h6>Useful Links</h6>
+          <h6>{t('Useful Links')}</h6>
           <ul>
             <li>
-              <Link to="/" className="link">
-                Home
+              <Link to="/home" className="link">
+                {t('Home')}
               </Link>
             </li>
             <li>
-              <Link to="/" className="link">
-                Pricing
+              <Link to="/Pricing" className="link">
+                {t('Pricing')}
               </Link>
             </li>
             <li>
-              <Link to="/" className="link">
-                FAQ
+              <Link to="/FAQ" className="link">
+                {t('FAQ')}
               </Link>
             </li>
             <li>
-              <Link to="/" className="link">
-                Contact
+              <Link to="/Contact" className="link">
+                {t('Contact')}
               </Link>
             </li>
           </ul>
         </div>
-        {/* <div className='col support'>
-                    <h6>About </h6>
-                    <ul>
-                        <p> WhatsApp Barq is<br/> your soltuion to expand your business  </p>
-                    </ul>
-                </div> */}
+    
         {/* <div className='col company'>
                     <h6>Company</h6>
                     <ul>
@@ -47,40 +44,51 @@ const Footer = () => {
                         <li><Link to='/'className='link'>Jops</Link></li>
                         <li><Link to='/'className='link'>Press</Link></li>
                     </ul>
-                </div> */}
+                </div>  */}
+
         <div className="col legal">
-          <h6>Legal</h6>
+          <h6> {t('Legal')}</h6>
           <ul>
             <li>
               <Link to="/" className="link">
-                Privacy
+                {t('Privacy')}
               </Link>
             </li>
             <li>
               <Link to="/" className="link">
-                Cookies
+                {t('Cookies')}
               </Link>
             </li>
             <li>
               <Link to="/" className="link">
-                Terms
+                {t('Terms & Conditions')}
               </Link>
             </li>
           </ul>
         </div>
         <div className="col-subscribe">
-          <h6>Subscribe to our newsletter</h6>
-          <p> The latest news, articles, and resources sent to your inbox.</p>
+          <h6> {t('Subscribe to our newsletter')} </h6>
+          <p> {t('The latest news, articles, and resources are sent to your inbox')}</p>
           <div className="subscribe">
-            <input type="email" placeholder="Enter your email" />
-            <button>Subscribe</button>
+            <input type="email" placeholder={t('Enter your email')}  />
+            <button> {t('Subscribe')} </button>
           </div>
+        </div>
+
+        <div className='col support'>
+          <h6>{t('About WhatsApp Barq')}</h6>
+          <ul>
+            <p> {t('your soltuion to expand your business')} </p>
+    
+          </ul>
+          
+
         </div>
       </div>
       <div className="footer-bottom">
         <div className="content">
           <div className="rights">
-            <p>&copy; WhatsApp Barg, All rights reserved.</p>
+            <p>&copy; {t('CopyWrite. All rights reserved for WHATSAPP BARG 2022')}  </p>
           </div>
           <div>
             <FaFacebook

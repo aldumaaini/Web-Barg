@@ -12,6 +12,8 @@ import Loader from "components/Loader";
 import NonAuthLayoutWrapper from "../../components/NonAutnLayoutWrapper";
 import AuthHeader from "../../components/AuthHeader";
 import FormInput from "../../components/FormInput";
+import Navbar from "../../components/Navbar/Navbar";
+import { useTranslation } from "react-i18next";
 
 const RegisterPage = (props) => {
   // global store
@@ -68,21 +70,24 @@ const RegisterPage = (props) => {
     }
   }, []);
 
+  const { t , i18n} = useTranslation();
+
   return (
     <NonAuthLayoutWrapper>
+      <Navbar />
       <Row className=" justify-content-center my-auto">
         <Col sm={8} lg={6} xl={5} className="col-xxl-4">
           <div className="py-md-5 py-4">
             <AuthHeader
-              title="Register Account"
-              subtitle="Get your free account now."
+              title={t ("Register Account")} 
+              subtitle={t ("Get your free account now")}  
             />
             {ReferralCode ? (
-              <Alert color="info">You are joining us using referral link</Alert>
+              <Alert color="info">{t ("You are joining us using referral link")}</Alert>
             ) : null}
 
             {user && user ? (
-              <Alert color="success">Register User Successfully</Alert>
+              <Alert color="success">{t ("Register User Successfully")}</Alert>
             ) : null}
 
             {registrationError && registrationError ? (
@@ -96,34 +101,34 @@ const RegisterPage = (props) => {
               {regLoading && <Loader />}
               <div className="mb-3">
                 <FormInput
-                  label="Name"
+                  label={t ("Name")}
                   type="text"
                   name="name"
                   register={register}
                   errors={errors}
                   control={control}
                   labelClassName="form-label"
-                  placeholder="Enter full name"
+                  placeholder={t ("Enter Full Name")} 
                   className="form-control"
                 />
               </div>
               <div className="mb-3">
                 <FormInput
-                  label="Email"
+                  label={t ("Email")}
                   type="text"
                   name="email"
                   register={register}
                   errors={errors}
                   control={control}
                   labelClassName="form-label"
-                  placeholder="Enter Email"
+                  placeholder={t ("Enter Your Email")}
                   className="form-control"
                 />
               </div>
 
               <div className="mb-3">
                 <FormInput
-                  label="Password"
+                  label={t ("Password")}
                   type="password"
                   name="password"
                   register={register}
@@ -132,18 +137,18 @@ const RegisterPage = (props) => {
                   withoutLabel={true}
                   labelClassName="form-label"
                   className="form-control pe-5"
-                  placeholder="Enter Password"
+                  placeholder={t ("Enter Password")} 
                 />
               </div>
-              <Label className="form-label">Phone Number</Label>
+              <Label className="form-label">{t ("Phone Number")}</Label>
               <div className="mb-3">
                 <PhoneInput
-                  country={"us"}
+                  country={"sa"}
                   value={phone}
                   enableSearch
                   onChange={(phone) => setphone(phone)}
                   inputProps={{
-                    name: "phone",
+                    name:t ("Phone"),
                     required: true,
                     autoFocus: true,
                   }}
@@ -152,10 +157,10 @@ const RegisterPage = (props) => {
 
               <div className="mb-4">
                 <p className="mb-0">
-                  By registering you agree to the Whatsapp Barg{" "}
-                  <Link to="#" className="text-primary">
-                    Terms of Use
-                  </Link>
+                {t ("By registering you agree to the Whatsapp Barg")} {" "}
+                  {/* <Link to="#" className="text-primary">
+                  {t ("Terms of Use")}
+                  </Link> */}
                 </p>
               </div>
 
@@ -165,19 +170,19 @@ const RegisterPage = (props) => {
                   className="w-100  waves-effect waves-light"
                   type="submit"
                 >
-                  Register
+                  {t ("Register")}
                 </Button>
               </div>
             </Form>
 
             <div className="mt-5 text-center text-muted">
               <p>
-                Already have an account ?{" "}
+              {t ("Already have an account ?")} 
                 <Link
                   to="/login"
                   className="fw-medium text-decoration-underline"
                 >
-                  Login
+                 {t ("Login")} 
                 </Link>
               </p>
             </div>

@@ -2,19 +2,20 @@ import React from "react";
 import { PricingTable, PricingSlot, PricingDetail } from "react-pricing-table";
 import PagesPricing from "pages/Utility/pages-pricing";
 import "./PricingStyles.css";
+import { useTranslation } from "react-i18next";
 
 const Pricing = () => {
+  const [t, i18n] = useTranslation();
   return (
     <div className="pricing">
       <div className="container">
         <div className="top-content">
           <div>
             <h2>
-              Choose your plan to <span> Enjoy the App features</span>
+            {t('Choose your plan to')} <span> {t('Enjoy the App features')} </span>
             </h2>
             <p>
-              Includes every feature we offer plus unlimited projects and
-              unlimited users.
+            {t('Plans Desc')} 
             </p>
           </div>
         </div>

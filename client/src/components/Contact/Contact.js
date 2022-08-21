@@ -2,23 +2,25 @@ import React from "react";
 import { FaEnvelope, FaMap, FaMobileAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "./ContactStyles.css";
+import { useTranslation } from "react-i18next";
+
 
 export const Contact = () => {
+  const [t, i18n]= useTranslation();
   return (
     <div className="contact">
       <div className="container">
         <div className="col-1">
           <div className="content">
             <div>
-              <h2>Get in touch</h2>
+              <h2> {t ('Get in touch')}</h2>
               <p>
-                WhatsApp Barg is Always looking for your contact We are
-                Available 24/7{" "}
+              {t ('Get In Touch Desc')}
               </p>
             </div>
             <div className="icons">
               <FaMap style={{ marginRight: "1rem" }} />
-              <p className="p-title">Riyadh - Saudi Arabia</p>
+              <p className="p-title"> {t ('Address')}</p>
             </div>
             <div className="icons">
               <FaMobileAlt style={{ marginRight: "1rem" }} />
@@ -26,44 +28,34 @@ export const Contact = () => {
             </div>
             <div className="icons">
               <FaEnvelope style={{ marginRight: "1rem" }} />
-              <p className="p-title">w-barg2@gmail.com</p>
+              <p className="p-title">info@w-barg.com</p>
             </div>
-            <div className="careers">
-              <p>
-                Looking for Support?{" "}
-                <span>
-                  {" "}
-                  <Link to="#" target="_blank">
-                    {" "}
-                    View all jop openings.{" "}
-                  </Link>{" "}
-                </span>{" "}
-              </p>
-            </div>
+
           </div>
         </div>
         <div className="col-2">
           <form action="">
-            <input type="text" placeholder="Full name" />
-            <input type="email" placeholder="Email" />
-            <input type="phone" placeholder="Phone" />
+            <input type="text" placeholder= {t('Full Name')} />
+            <input type="email" placeholder={t("Email")} />
+            <input type="phone" placeholder={t("Phone")} />
             <textarea
               name="Message"
-              placeholder="Message"
+              placeholder={t("Message")} 
               cols="30"
               rows="10"
             ></textarea>
-            <div className="checkbox">
+            {/* <div className="checkbox">
               <input type="checkbox" />
               <p>
-                By checking this box, you agree to the{" "}
-                <span>Privacy Policy</span> and
-                <span>Cookie Policy</span>.
+              {t("Contact Form Msg")}  
+                <span>{t("Privacy Policy")} </span> {t("and")} 
+                <span>{t("Cookie Policy")}</span>
               </p>
-            </div>
-            <button>Submit</button>
+            </div> */}
+            <button>{t("Submit")}</button>
           </form>
         </div>
+    
       </div>
     </div>
   );

@@ -1,6 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,100&family=Noto+Kufi+Arabic:wght@100;400;600;700&display=swap');
+
 .pricing {
   width: 100%;
   margin-top: 5rem;
+  font-family: 'Lato', sans-serif;
+  font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
 .pricing .container {
@@ -9,6 +13,8 @@
   margin: auto;
   overflow: hidden;
   align-content: center;
+  font-family: 'Lato', sans-serif;
+  font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
 .pricing .top-content {
@@ -48,6 +54,8 @@
   border-bottom: 1px solid var(--lightgrey);
   /* padding: 1rem 0;*/
   flex-direction: column;
+  font-family: 'Lato', sans-serif;
+  font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
 .pricing .card .no-border {
@@ -59,11 +67,15 @@
   text-transform: uppercase;
   font-weight: 500;
   font-size: 14px;
+  font-family: 'Lato', sans-serif;
+  font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
 .pricing .card h3 {
   font-size: 28px;
   margin: 0.7rem;
+  font-family: 'Lato', sans-serif;
+  font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
 @media screen and (max-width: 960px) {

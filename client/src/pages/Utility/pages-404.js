@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardBody, Row, Col } from "reactstrap";
 import MetaTags from "react-meta-tags";
+import "./utility.css";
 
 //Import Images
 import errorImg from "../../assets/images/error.png";
