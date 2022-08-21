@@ -34,17 +34,21 @@ const LoginPage = (props) => {
   );
 
   const history = useHistory();
-
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const resolver = yupResolver(
     yup.object().shape({
-      email: yup.string().required("Please Enter E-mail."),
+      mobile: yup
+        .string()
+        .matches(phoneRegExp, "Phone number is not valid")
+        .required("Please enter phone number"),
       password: yup.string().required("Please Enter Password."),
     })
   );
 
   const defaultValues = {
-    email: "pro.ikp@gmail.com",
-    password: "12345",
+    mobile: "",
+    password: "",
   };
 
   const methods = useForm({ defaultValues, resolver });
@@ -75,34 +79,6 @@ const LoginPage = (props) => {
     }
   }, [isUserLogin, history, loginLoading]);
 
-  /*const signIn = (res, type) => {
-    if (type === "google" && res) {
-      const postData = {
-        name: res.profileObj.name,
-        email: res.profileObj.email,
-        token: res.tokenObj.access_token,
-        idToken: res.tokenId,
-      };
-      dispatch(socialLogin(postData, type));
-    } else if (type === "facebook" && res) {
-      const postData = {
-        name: res.name,
-        token: res.accessToken,
-      };
-      dispatch(socialLogin(postData, type));
-    }
-  };*/
-
-  //handleFacebookLoginResponse
-  /* const facebookResponse = (response) => {
-    signIn(response, "facebook");
-  };*/
-
-  //handleGoogleLoginResponse
-  /*const googleResponse = (response) => {
-    signIn(response, "google");
-  };*/
-
   return (
     <NonAuthLayoutWrapper>
       <Row className=" justify-content-center my-auto">
@@ -122,14 +98,14 @@ const LoginPage = (props) => {
               {loginLoading && <Loader />}
               <div className="mb-3">
                 <FormInput
-                  label="Email Address"
+                  label="Phone number"
                   type="text"
-                  name="email"
+                  name="mobile"
                   register={register}
                   errors={errors}
                   control={control}
                   labelClassName="form-label"
-                  placeholder="Enter email address"
+                  placeholder="Enter phone number in country code format"
                   className="form-control"
                 />
               </div>

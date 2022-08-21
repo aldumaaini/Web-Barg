@@ -10,7 +10,7 @@ import { postLogin } from "../../../helpers/backend_helper";
 
 function* loginUser({ payload: { user, history } }) {
   const response = yield call(postLogin, {
-    email: user.email,
+    mobile: user.mobile,
     password: user.password,
   });
 

@@ -358,78 +358,10 @@ router.delete("/delete-user-admin", verifyJWT, async function (req, res) {
   });
 });
 /* LOGIN - router */
-router.post("/loginDashboard", function (req, res) {
-  const { email, password } = req.body;
-  CON.query(
-    "SELECT u.id AS userID, u.password,u.email,u.role,u.isPhoneVerified,u.code, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage,up.memeberShipNumber FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.email = ?",
-    [email],
-    async function (err, Results) {
-      if (err) {
-        res.status(500).send(ResponseHandler(500, null, null));
-      } else {
-        if (Results.length === 1) {
-          let userPassword = Results[0].password;
-          let userID = Results[0].userID;
-          let email = Results[0].email;
-          let FullName = Results[0].FullName;
-          let phone = Results[0].phone;
-          let isPhoneVerified = Results[0].isPhoneVerified;
-          let code = Results[0].code;
-          let role = Results[0].role;
-          let planType = Results[0].planType;
-          let PlanExpireDate = Results[0].PlanExpireDate;
-          let totalUsedMessage = Results[0].totalUsedMessage;
-          let memeberShipNumber = Results[0].memeberShipNumber;
-          let planStatus = Results[0].planStatus;
-          const match = await bcrypt.compare(password, userPassword);
-          if (match) {
-            const token = jwt.sign({ userID: userID }, SECRETKEY, {
-              expiresIn: "30d",
-            });
-            let userData = {
-              token: token,
-              user: {
-                userId: userID,
-                FullName,
-                email,
-                isPhoneVerified,
-                code,
-                role,
-                phone,
-                planType, // plan type either Free or premiume
-                PlanExpireDate, // plan expiry date
-                totalUsedMessage, // this to track sent messages
-                planStatus, // either active or unactive
-                memeberShipNumber,
-              },
-            };
-
-            res.status(200).send(ResponseHandler(200, userData, "successfull"));
-          } else {
-            res
-              .status(401)
-              .send(ResponseHandler(401, null, "Password not matching"));
-          }
-        } else {
-          res
-            .status(404)
-            .send(
-              ResponseHandler(
-                404,
-                null,
-                "No account associated with this email"
-              )
-            );
-        }
-      }
-    }
-  );
-});
-
 router.post("/login", function (req, res) {
   const { mobile, password } = req.body;
   CON.query(
-    "SELECT u.id AS userID, u.password,u.email,u.isPhoneVerified, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage,up.memeberShipNumber FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.phone = ?",
+    "SELECT u.id AS userID, u.password,u.email,u.isPhoneVerified,u.code, u.role, u.FullName,u.phone,up.planType,up.PlanExpireDate,up.planStatus,up.totalUsedMessage,up.memeberShipNumber FROM users u INNER JOIN userPlan up ON u.id = up.userId WHERE u.phone = ?",
     [mobile],
     async function (err, Results) {
       if (err) {
@@ -442,6 +374,8 @@ router.post("/login", function (req, res) {
           let FullName = Results[0].FullName;
           let phone = Results[0].phone;
           let planType = Results[0].planType;
+          let code = Results[0].code;
+          let role = Results[0].role;
           let PlanExpireDate = Results[0].PlanExpireDate;
           let totalUsedMessage = Results[0].totalUsedMessage;
           let planStatus = Results[0].planStatus;
@@ -452,6 +386,7 @@ router.post("/login", function (req, res) {
             const token = jwt.sign({ userID: userID }, SECRETKEY, {
               expiresIn: "30d",
             });
+
             let userData = {
               token: token,
               user: {
@@ -459,6 +394,8 @@ router.post("/login", function (req, res) {
                 FullName,
                 email,
                 isPhoneVerified,
+                code,
+                role,
                 phone,
                 planType, // plan type either Free or premiume
                 PlanExpireDate, // plan expiry date
