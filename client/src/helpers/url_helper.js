@@ -2,7 +2,7 @@
 export const POST_REGISTER = "/register-new-account";
 export const MEMBERSHIP_VALIDATION = "/UserPlanValidation";
 //LOGIN
-export const POST_LOGIN = "/loginDashboard";
+export const POST_LOGIN = "/login";
 export const GET_AUTHENTICATE_USER = "/isValidUser";
 export const POST_FORGOT_PASSWORD = "/password-reset";
 export const POST_NEW_PASSWORD = "/new-password";

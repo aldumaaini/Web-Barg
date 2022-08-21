@@ -37,16 +37,23 @@ const LoginPage = (props) => {
   );
 
   const history = useHistory();
-
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const resolver = yupResolver(
     yup.object().shape({
-      Phone_Number: yup.string().required(t ('Please Enter Mobile Number') ),
-      password: yup.string().required(t ('Please Enter Password') ),
+
+      mobile: yup
+        .string()
+        .matches(phoneRegExp, "Phone number is not valid")
+        .required(t ('Please Enter Password')),
+      password: yup.string().required(t ('Please Enter Mobile Number')),
+
     })
   );
 
   const defaultValues = {
-    Phone_Number: "",
+
+    mobile: "",
     password: "",
   };
 
@@ -78,34 +85,6 @@ const LoginPage = (props) => {
     }
   }, [isUserLogin, history, loginLoading]);
 
-  /*const signIn = (res, type) => {
-    if (type === "google" && res) {
-      const postData = {
-        name: res.profileObj.name,
-        email: res.profileObj.email,
-        token: res.tokenObj.access_token,
-        idToken: res.tokenId,
-      };
-      dispatch(socialLogin(postData, type));
-    } else if (type === "facebook" && res) {
-      const postData = {
-        name: res.name,
-        token: res.accessToken,
-      };
-      dispatch(socialLogin(postData, type));
-    }
-  };*/
-
-  //handleFacebookLoginResponse
-  /* const facebookResponse = (response) => {
-    signIn(response, "facebook");
-  };*/
-
-  //handleGoogleLoginResponse
-  /*const googleResponse = (response) => {
-    signIn(response, "google");
-  };*/
-
   return (
    
 
@@ -128,14 +107,18 @@ const LoginPage = (props) => {
               {loginLoading && <Loader />}
               <div className="mb-3">
                 <FormInput
+ 
                   label={t ("Phone Number")}
-                  type="Phone"
-                  name="Phone Number"
+                  type="text"
+                  name="mobile"
+ 
                   register={register}
                   errors={errors}
                   control={control}
                   labelClassName="form-label"
+ 
                   placeholder={t ("Enter Your Mobile:966509336310")}
+ 
                   className="form-control"
                 />
               </div>
