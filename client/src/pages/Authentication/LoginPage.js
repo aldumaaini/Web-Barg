@@ -10,6 +10,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 import Loader from "components/Loader";
+import { useTranslation } from "react-i18next";
 // router
 import { Link, Redirect, useHistory, useLocation } from "react-router-dom";
 import { loginUser } from "../../store/actions";
@@ -20,9 +21,11 @@ import { useForm } from "react-hook-form";
 import NonAuthLayoutWrapper from "../../components/NonAutnLayoutWrapper";
 import AuthHeader from "../../components/AuthHeader";
 import FormInput from "../../components/FormInput";
+import Navbar from "../../components/Navbar/Navbar";
 
 const LoginPage = (props) => {
   const { dispatch, useAppSelector } = useRedux();
+  const [t, i18n]= useTranslation();
 
   const { user, isUserLogin, error, loginLoading } = useAppSelector(
     (state) => ({
@@ -38,15 +41,18 @@ const LoginPage = (props) => {
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const resolver = yupResolver(
     yup.object().shape({
+
       mobile: yup
         .string()
         .matches(phoneRegExp, "Phone number is not valid")
-        .required("Please enter phone number"),
-      password: yup.string().required("Please Enter Password."),
+        .required(t ('Please Enter Password')),
+      password: yup.string().required(t ('Please Enter Mobile Number')),
+
     })
   );
 
   const defaultValues = {
+
     mobile: "",
     password: "",
   };
@@ -80,13 +86,16 @@ const LoginPage = (props) => {
   }, [isUserLogin, history, loginLoading]);
 
   return (
+   
+
     <NonAuthLayoutWrapper>
+      <Navbar />
       <Row className=" justify-content-center my-auto">
         <Col sm={8} lg={6} xl={5} className="col-xxl-4">
           <div className="py-md-5 py-4">
             <AuthHeader
-              title="Welcome Back !"
-              subtitle="Sign in to continue to Doot."
+              title={t ('Welcome Back!')}
+              subtitle={t ('Sign in to continue to Whatsapp Barg')}
             />
 
             {error !== "" && <Alert color="danger">{error}</Alert>}
@@ -98,21 +107,25 @@ const LoginPage = (props) => {
               {loginLoading && <Loader />}
               <div className="mb-3">
                 <FormInput
-                  label="Phone number"
+ 
+                  label={t ("Phone Number")}
                   type="text"
                   name="mobile"
+ 
                   register={register}
                   errors={errors}
                   control={control}
                   labelClassName="form-label"
-                  placeholder="Enter phone number in country code format"
+ 
+                  placeholder={t ("Enter Your Mobile:966509336310")}
+ 
                   className="form-control"
                 />
               </div>
 
               <div className="mb-3">
                 <FormInput
-                  label="Password"
+                  label={t ("Password")}
                   type="password"
                   name="password"
                   register={register}
@@ -120,7 +133,7 @@ const LoginPage = (props) => {
                   control={control}
                   labelClassName="form-label"
                   className="form-control pe-5"
-                  placeholder="Enter Password"
+                  placeholder={t ("Enter Password")} 
                 />
               </div>
 
@@ -151,13 +164,13 @@ const LoginPage = (props) => {
 
             <div className="mt-5 text-center text-muted">
               <p>
-                Don't have an account ?{" "}
+              {t ("You don't have an account?")} {" "}
                 <Link
                   to="/register"
                   className="fw-medium text-decoration-underline"
                 >
                   {" "}
-                  Register
+                  {t ('Register')}
                 </Link>
               </p>
             </div>

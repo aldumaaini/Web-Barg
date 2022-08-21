@@ -1,6 +1,7 @@
 import React from "react";
 import "./HomeStyles.css";
 import Navbar from "../Navbar/Navbar";
+<Navbar />
 import Hero from "../Hero/Hero";
 import { MetaTags } from "react-meta-tags";
 import Pricing from "../Pricing/Pricing";

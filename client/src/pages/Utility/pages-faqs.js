@@ -13,6 +13,7 @@ import {
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
+import "./utility.css";
 
 const PagesFaqs = () => {
   const [faq1, setFaq1] = useState(true);

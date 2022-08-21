@@ -13,10 +13,12 @@ import NonAuthLayoutWrapper from "../../components/NonAutnLayoutWrapper";
 import AuthHeader from "../../components/AuthHeader";
 import FormInput from "../../components/FormInput";
 import Loader from "../../components/Loader";
+import { useTranslation } from "react-i18next";
 
 const RecoverPassword = (props) => {
   const { useAppSelector, dispatch } = useRedux();
   const [rSelected, setRSelected] = React.useState(null);
+  const { t, i18n } = useTranslation();
 
   const { forgetError, forgetSuccessMsg, forgetPassLoading } = useAppSelector(
     (state) => ({
@@ -58,7 +60,7 @@ const RecoverPassword = (props) => {
       <Row className=" justify-content-center my-auto">
         <Col sm={8} lg={6} xl={5} className="col-xxl-4">
           <div className="py-md-5 py-4">
-            <AuthHeader title="Reset Password" subtitle="" />
+            <AuthHeader title={t ("Reset Password")}  subtitle="" />
 
             {forgetError && forgetError ? (
               <Alert color="danger">{forgetError.data}</Alert>
@@ -68,13 +70,12 @@ const RecoverPassword = (props) => {
             ) : null}
             {!forgetError && !forgetSuccessMsg && rSelected === null && (
               <Alert color="info" className="text-center my-4">
-                Please selected verification method
+                {t ("Please selected verification method")} 
               </Alert>
             )}
             {!forgetError && !forgetSuccessMsg && rSelected && (
               <Alert color="info" className="text-center my-4">
-                Enter your Email or Phone number and instructions will be sent
-                to you!
+                {t ("Enter your Email or Phone number and instructions will be sent to you!")}  
               </Alert>
             )}
             <div className="mb-3">
@@ -85,7 +86,7 @@ const RecoverPassword = (props) => {
                   onClick={() => setRSelected("email")}
                   active={rSelected === "email"}
                 >
-                  Reset using E-mail address
+                   {t ("Reset using E-mail address")}   
                 </Button>
                 <Button
                   color="primary"
@@ -93,7 +94,7 @@ const RecoverPassword = (props) => {
                   onClick={() => setRSelected("phone")}
                   active={rSelected === "phone"}
                 >
-                  Reset using Phone Number
+                  {t ("Reset using Phone Number")}   
                 </Button>
               </ButtonGroup>
             </div>
