@@ -22,15 +22,6 @@ const Users = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [event, setEvent] = useState({});
 
-  const [isEdit, setIsEdit] = useState(false);
-
-  /**
-   * Handling the modal state
-   */
-
-  /**
-   * On delete event
-   */
   const handleAddNewUser = () => {
     // setIsAddingUser(true);
     //setDeleteModal(true);

@@ -13,11 +13,15 @@ const moment = require("moment");
 const router = express.Router();
 env.config({ path: "./.env" });
 
-//get value of SECRETKEY for hashing
 const SECRETKEY = process.env.SECRETKEY || "";
-("");
+const PAYMENT_KEY = process.env.PAYMENT_KEY || "";
 
-/* SIGN-UP router */
+router.get("/PaymentKeys", verifyJWT, (req, res) => {
+  res.send({
+    PayemntKey: PAYMENT_KEY,
+  });
+});
+
 //register-new-account
 router.post("/register-new-account", async function (req, res) {
   const { name, phone, password, email, ReferralCode } = req.body;
@@ -140,12 +144,6 @@ router.post("/register-new-account", async function (req, res) {
   );
 });
 
-/* 
-export const GET_COUPONE = "/coupons-admin";
-export const ADD_NEW_COUPONE = "/add-new-coupons-admin";
-export const DELETE_COUPONE = "/delete-coupons-admin";
-*/
-
 router.get("/coupons-admin", verifyJWT, async function (req, res) {
   // const { id } = req.body;
 
@@ -188,7 +186,7 @@ router.post("/add-new-coupons-admin", verifyJWT, async function (req, res) {
 
 //delete-coupone-admin
 router.delete("/delete-coupons-admin", verifyJWT, async function (req, res) {
-  const { id } = req.headers;
+  const { id } = req.query;
 
   CON.query("DELETE FROM Coupons WHERE id=?", [id], function (err, results) {
     if (err) res.status(500).send(ResponseHandler(500, null, null));
@@ -282,9 +280,20 @@ router.post("/add-new-user-admin", verifyJWT, async function (req, res) {
                                 let ExpireDate = moment()
                                   .add(7, "days")
                                   .format("YYYY-MM-DD");
+
+                                let memeberShipNumber = `6565${Math.floor(
+                                  100000 + Math.random() * 900000000000
+                                )}`;
                                 CON.query(
-                                  "INSERT INTO userPlan( userId,planType,PlanExpireDate, planStatus,totalUsedMessage)VALUES(?,?,?,?,?)",
-                                  [userId, "Free", ExpireDate, "active", 0],
+                                  "INSERT INTO userPlan( userId,planType,PlanExpireDate, planStatus,totalUsedMessage, memeberShipNumber)VALUES(?,?,?,?,?,?)",
+                                  [
+                                    userId,
+                                    "Free",
+                                    ExpireDate,
+                                    "active",
+                                    0,
+                                    memeberShipNumber,
+                                  ],
                                   function (err, results) {
                                     if (err)
                                       res
@@ -348,7 +357,7 @@ router.put("/update-user-admin", verifyJWT, async function (req, res) {
 });
 //delete-user-admin
 router.delete("/delete-user-admin", verifyJWT, async function (req, res) {
-  const { id } = req.headers;
+  const { id } = req.query;
 
   CON.query("DELETE FROM users WHERE id=?", [id], function (err, results) {
     if (err) res.status(500).send(ResponseHandler(500, null, null));
@@ -357,6 +366,96 @@ router.delete("/delete-user-admin", verifyJWT, async function (req, res) {
     }
   });
 });
+
+router.post("/callbackTap", function (req, res) {
+  console.log("callback taps req post: ", req);
+});
+
+router.get("/fetch-user-transactions", verifyJWT, function (req, res) {
+  let id = req.user;
+  CON.query(
+    "SELECT * FROM transactions WHERE cus_unique_id = ?",
+    [id],
+    async function (err, Results) {
+      if (err) {
+        res.status(500).send(ResponseHandler(500, null, null));
+      } else {
+        return res
+          .status(200)
+          .send(ResponseHandler(200, Results, "successfull"));
+      }
+    }
+  );
+});
+
+router.get("/fetch-admin-transactions", verifyJWT, function (req, res) {
+  let id = req.user;
+  CON.query("SELECT * FROM transactions", async function (err, Results) {
+    if (err) {
+      res.status(500).send(ResponseHandler(500, null, null));
+    } else {
+      return res.status(200).send(ResponseHandler(200, Results, "successfull"));
+    }
+  });
+});
+
+router.post("/user-membership-subscription", verifyJWT, function (req, res) {
+  const {
+    transactions_id,
+    status,
+    amount,
+    currency,
+    receipt_id,
+    cue_id,
+    cus_email,
+    cus_unique_id,
+    method,
+    cardLast4,
+  } = req.body;
+  CON.query(
+    "INSERT INTO transactions (transactions_id,status,amount,currency,receipt_id,cus_id,cus_email,cus_unique_id ,method,cardLast4) VALUES (?,?,?,?,?,?,?,?,?,?)",
+    [
+      transactions_id,
+      status,
+      amount,
+      currency,
+      receipt_id,
+      cue_id,
+      cus_email,
+      cus_unique_id,
+      method,
+      cardLast4,
+    ],
+    async function (err, Results) {
+      if (err) {
+        return res.status(500).send(ResponseHandler(500, null, null));
+      } else {
+        if (Results.affectedRows > 0) {
+          var startdate = moment();
+          startdate = startdate.add(1, "month");
+          let oneMonthAhead = startdate.format("YYYY-MM-DD");
+          let sqlCheck = `UPDATE userPlan SET planType=?, PlanExpireDate=? WHERE userId =?`;
+          CON.query(
+            sqlCheck,
+            ["Paid", oneMonthAhead, cus_unique_id],
+            (err, result) => {
+              if (err) {
+                return res.status(500).send(ResponseHandler(500, null, null));
+              } else {
+                return res
+                  .status(200)
+                  .send(ResponseHandler(200, "ok", "successfull"));
+              }
+            }
+          );
+        } else {
+          return res.status(500).send(ResponseHandler(500, null, null));
+        }
+      }
+    }
+  );
+});
+
 /* LOGIN - router */
 router.post("/login", function (req, res) {
   const { mobile, password } = req.body;
@@ -578,39 +677,88 @@ router.get("/UserPlanValidation", verifyJWT, (req, res) => {
 
           if (planType === "Free") {
             if (isExpiryInthePast) {
-              response = { info: "Expired", code: 100, planType };
+              response = {
+                info: "Expired",
+                code: 100,
+                planType,
+                PlanExpiryDate,
+                totalUsedMessage,
+                status,
+              };
               return res
                 .status(403)
                 .send(ResponseHandler(403, response, "not valid"));
             } else if (PlanStatus !== "active") {
-              response = { info: "Not active", code: 101, planType };
+              response = {
+                info: "Not active",
+                code: 101,
+                planType,
+                PlanExpiryDate,
+                totalUsedMessage,
+                status,
+              };
               return res
                 .status(403)
                 .send(ResponseHandler(403, response, "not valid"));
             } else if (totalUsedMessage >= 100) {
-              response = { info: "Trial ended", code: 102, planType };
+              response = {
+                info: "Trial ended",
+                code: 102,
+                planType,
+                PlanExpiryDate,
+                totalUsedMessage,
+                status,
+              };
               return res
                 .status(403)
                 .send(ResponseHandler(403, response, "not valid"));
             } else {
-              response = { info: "active", totalUsedMessage, planType };
+              response = {
+                info: "active",
+                totalUsedMessage,
+                planType,
+                PlanExpiryDate,
+                totalUsedMessage,
+                status,
+              };
               return res
                 .status(200)
                 .send(ResponseHandler(200, response, "valid"));
             }
           } else {
             if (isExpiryInthePast) {
-              response = { info: "Expired", code: 100, planType };
+              response = {
+                info: "Expired",
+                code: 100,
+                planType,
+                PlanExpiryDate,
+                totalUsedMessage,
+                status,
+              };
               return res
                 .status(403)
                 .send(ResponseHandler(403, response, "not valid"));
             } else if (PlanStatus !== "active") {
-              response = { info: "Not active", code: 101, planType };
+              response = {
+                info: "Not active",
+                code: 101,
+                planType,
+                PlanExpiryDate,
+                totalUsedMessage,
+                status,
+              };
               return res
                 .status(403)
                 .send(ResponseHandler(403, response, "not valid"));
             } else {
-              response = { info: "active", totalUsedMessage, planType };
+              response = {
+                info: "active",
+                totalUsedMessage,
+                planType,
+                PlanExpiryDate,
+                totalUsedMessage,
+                status,
+              };
               return res
                 .status(200)
                 .send(ResponseHandler(200, response, "valid"));

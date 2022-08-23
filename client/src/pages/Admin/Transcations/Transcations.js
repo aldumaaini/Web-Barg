@@ -8,34 +8,33 @@ import PagesInvoice from "pages/Utility/PagesInvoice";
 //Import Breadcrumb
 import { useProfile } from "hooks";
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
-import { getUserTransactionsShip } from "store/actions";
+import { getAdminTransactionsShip } from "store/actions";
 import InvoicseModal from "./InvoiceModal";
 import moment from "moment";
 //css
 
-const TranscationsUser = (props) => {
+const TransactionsAdmin = (props) => {
   const [SelectedInvoiceData, setSelectedInvoiceData] = useState(null);
   const { dispatch, useAppSelector } = useRedux();
   const [InvoiceModal, setInvoiceModal] = useState(false);
-  const [event, setEvent] = useState({});
+
   const { userProfile } = useProfile();
-  const [isEdit, setIsEdit] = useState(false);
+
   if (userProfile && userProfile.isPhoneVerified === 0) {
     return <Redirect to={{ pathname: "/phone-number-verification" }} />;
   }
 
-  const { transactions, error, loading, success, message } = useAppSelector(
-    (state) => ({
+  const { transactionsAdmin, error, loading, success, message } =
+    useAppSelector((state) => ({
       error: state.Transactions.error,
-      transactions: state.Transactions.transactions,
+      transactionsAdmin: state.Transactions.transactionsAdmin,
       message: state.Transactions.message,
       loading: state.Transactions.loading,
       success: state.Transactions.success,
-    })
-  );
+    }));
 
   useEffect(() => {
-    dispatch(getUserTransactionsShip());
+    dispatch(getAdminTransactionsShip());
   }, []);
 
   const handleShowInvoiceModal = (data) => {
@@ -60,7 +59,7 @@ const TranscationsUser = (props) => {
   if (loading) return <Loader />;
   const closeInvoice = () => {
     setInvoiceModal(false);
-    // setSelectedInvoiceData(null);
+    //setSelectedInvoiceData(null);
   };
 
   return (
@@ -107,8 +106,8 @@ const TranscationsUser = (props) => {
                             </tr>
                           </thead>
                           <tbody>
-                            {transactions.map((i) => (
-                              <tr>
+                            {transactionsAdmin.map((i, index) => (
+                              <tr key={index}>
                                 <th scope="row">{i.transactions_id}</th>
 
                                 <td>{`${i.amount.toFixed(2)}  ${
@@ -159,4 +158,4 @@ const TranscationsUser = (props) => {
   );
 };
 
-export default TranscationsUser;
+export default TransactionsAdmin;

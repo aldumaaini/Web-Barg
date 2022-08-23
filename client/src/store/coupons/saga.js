@@ -30,6 +30,7 @@ function* fetchCoupones() {
 
 function* onAddNewCoupone({ payload: coupone }) {
   const response = yield call(addNewCoupone, coupone);
+
   if (response.success === true) {
     yield put(addCouponSuccess(response.data));
   } else {

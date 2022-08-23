@@ -17,13 +17,25 @@ const INIT_STATE = {
   users: [],
   error: null,
   message: null,
-  loading: false,
+  loading: true,
   success: false,
+  successAdd: false,
 };
 
 const Users = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case GET_USERS || UPDATE_USER || DELETE_USER || ADD_NEW_USER:
+    case GET_USERS:
+      return {
+        ...state,
+        //loading: true,
+      };
+    case DELETE_USER:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case ADD_NEW_USER:
       return {
         ...state,
         loading: true,
@@ -48,7 +60,7 @@ const Users = (state = INIT_STATE, action) => {
     case ADD_NEW_USER_SUCCESS:
       return {
         ...state,
-        users: [...state.users, action.payload],
+        //  users: [...state.users, action.payload],
         error: null,
         loading: false,
         success: true,
