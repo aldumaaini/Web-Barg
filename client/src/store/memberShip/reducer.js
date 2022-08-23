@@ -2,14 +2,19 @@ import {
   GET_MEMBERSHIP,
   GET_MEMBERSHIP_FAIL,
   GET_MEMBERSHIP_SUCCESS,
+  USER_MEMBERSHIP_SUBSCRIPTION,
+  USER_MEMBERSHIP_SUBSCRIPTION_FAIL,
+  USER_MEMBERSHIP_SUBSCRIPTION_SUCCESS,
 } from "./actionTypes";
 
 const INIT_STATE = {
   memebershipvalidation: null,
   error: null,
   message: null,
-  loading: false,
-  success: false,
+  loading: true,
+  success: null,
+  subscriptionSuccess: false,
+  subscriptionFail: false,
 };
 
 const MemberShip = (state = INIT_STATE, action) => {
@@ -17,8 +22,15 @@ const MemberShip = (state = INIT_STATE, action) => {
     case GET_MEMBERSHIP:
       return {
         ...state,
-        loading: true,
+        // loading: true,
       };
+
+    case USER_MEMBERSHIP_SUBSCRIPTION:
+      return {
+        ...state,
+        //loading: true,
+      };
+
     case GET_MEMBERSHIP_SUCCESS:
       return {
         ...state,
@@ -28,9 +40,26 @@ const MemberShip = (state = INIT_STATE, action) => {
         //success: true,
       };
 
+    case USER_MEMBERSHIP_SUBSCRIPTION_SUCCESS:
+      return {
+        ...state,
+        subscriptionSuccess: true,
+        subscriptionFail: false,
+        // loading: false,
+        //success: true,
+      };
+
+    case USER_MEMBERSHIP_SUBSCRIPTION_FAIL:
+      return {
+        ...state,
+        subscriptionSuccess: false,
+        subscriptionFail: true,
+        // loading: false,
+      };
     case GET_MEMBERSHIP_FAIL:
       return {
         ...state,
+        memebershipvalidation: action.payload,
         error: action.payload,
         loading: false,
         success: false,

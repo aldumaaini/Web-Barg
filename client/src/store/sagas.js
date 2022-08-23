@@ -10,6 +10,7 @@ import usersSaga from "./users/saga";
 import couponesSaga from "./coupons/saga";
 import isAuthSaga from "./auth/userAuth/saga";
 import memberShipSaga from "./memberShip/saga";
+import TransactionsSaga from "./Transactions/saga";
 
 export default function* rootSaga() {
   yield all([
@@ -17,6 +18,7 @@ export default function* rootSaga() {
     AccountSaga(),
     isAuthSaga(),
     memberShipSaga(),
+    TransactionsSaga(),
     fork(AuthSaga),
     fork(ProfileSaga),
     ForgetSaga(),

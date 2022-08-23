@@ -2,16 +2,14 @@ import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import MetaTags from "react-meta-tags";
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import ProgressCircleSvg from "components/AllCharts/svgCharts/circlePorgress";
 import moment from "moment";
 import servicesIcon1 from "../../assets/images/services-icon/01.png";
 import servicesIcon2 from "../../assets/images/services-icon/02.png";
-import servicesIcon3 from "../../assets/images/services-icon/03.png";
-import servicesIcon4 from "../../assets/images/services-icon/04.png";
 import Salesdonut from "../../components/AllCharts/apex/salesdonut";
 import { useProfile, useRedux } from "hooks";
-import { getUsers } from "store/actions";
+import { getUsers, getAdminTransactionsShip } from "store/actions";
 import "chartist/dist/scss/chartist.scss";
 
 //i18n
@@ -24,6 +22,11 @@ const DashboardUser = (props) => {
   const stroeStates = useAppSelector((state) => state);
 
   let usersArray = stroeStates.Users.users;
+  let TransactionsArray = stroeStates.Transactions.transactionsAdmin;
+  let totalRevenue = TransactionsArray?.reduce(
+    (a, b) => a + (b.amount || 0),
+    0
+  );
 
   if (
     userProfile &&
@@ -33,7 +36,11 @@ const DashboardUser = (props) => {
     return <Redirect to={{ pathname: "/phone-number-verification" }} />;
   }
   useEffect(() => {
-    dispatch(getUsers());
+    if (userProfile.role === "admin") {
+      dispatch(getUsers());
+      dispatch(getAdminTransactionsShip());
+      //
+    }
   }, []);
 
   const sortUsers = () => {
@@ -116,7 +123,7 @@ const DashboardUser = (props) => {
                         Subscription Plan
                       </h5>
                       <h4 className="fw-medium font-size-24">
-                        {userProfile.planType}{" "}
+                        {userProfile.planType === "Paid" ? "PREMIUM" : "FRESS"}{" "}
                       </h4>
                     </div>
                   </CardBody>
@@ -221,7 +228,10 @@ const DashboardUser = (props) => {
                       <h5 className="font-size-16 text-uppercase mt-0 text-white-50">
                         Revenue
                       </h5>
-                      <h4 className="fw-medium font-size-24">52,368 </h4>
+                      <h4 className="fw-medium font-size-24">
+                        {" SAR "}
+                        {totalRevenue.toFixed(2)}{" "}
+                      </h4>
                     </div>
                   </CardBody>
                 </Card>

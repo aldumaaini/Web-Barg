@@ -1,7 +1,12 @@
 //REGISTER
 export const POST_REGISTER = "/register-new-account";
 export const MEMBERSHIP_VALIDATION = "/UserPlanValidation";
+
+export const GET_USER_TRANSACTIONS = "/fetch-user-transactions";
+//GET_ADMIN_TRANSACTIONS
+export const GET_ADMIN_TRANSACTIONS = "/fetch-admin-transactions";
 //LOGIN
+export const USER_MEMBERSHIP_SUBSCRIPTION = "/user-membership-subscription";
 export const POST_LOGIN = "/login";
 export const GET_AUTHENTICATE_USER = "/isValidUser";
 export const POST_FORGOT_PASSWORD = "/password-reset";

@@ -31,6 +31,11 @@ const Authmiddleware = ({
             .then((res) => {
               setIsValiedToken(true);
               setIsloading(false);
+
+              localStorage.setItem(
+                "authUser",
+                JSON.stringify(res.data.data.user)
+              );
             })
             .catch((err) => {
               if (err.response) {

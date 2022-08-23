@@ -33,15 +33,15 @@ const Users = (props) => {
   const [isAddingUser, setIsAddingUser] = useState(false);
   const { dispatch, useAppSelector } = useRedux();
 
-  const { users, error, loading, success, message } = useAppSelector(
-    (state) => ({
+  const { users, error, loading, success, message, successAdd } =
+    useAppSelector((state) => ({
       error: state.Users.error,
       users: state.Users.users,
       message: state.Users.message,
       loading: state.Users.loading,
       success: state.Users.success,
-    })
-  );
+      successAdd: state.Users.successAdd,
+    }));
 
   const resolver = yupResolver(
     yup.object().shape({
@@ -67,27 +67,12 @@ const Users = (props) => {
 
   const onSubmitForm = (values) => {
     dispatch(addNewUser(values));
-    // let registrationData = { ...values, phone };
-    // dispatch(registerUser(registrationData));
+    setIsAddingUser(false);
   };
   useEffect(() => {
-    setTimeout(() => {
-      dispatch(getUsers());
-    }, 100);
-  }, [success]);
+    dispatch(getUsers());
+  }, [loading]);
 
-  useEffect(() => {
-    if (success && !error) {
-      setTimeout(() => {
-        setIsAddingUser(false);
-      }, 500);
-    }
-  }, [success]);
-
-  /**
-   * On delete event
-   */
-  const handleOnEdit = () => {};
   const handleOnDelete = (id) => {
     setDeleteId(id);
     setDeleteModal(true);
@@ -226,8 +211,8 @@ const Users = (props) => {
                             </thead>
                             <tbody>
                               {!loading && users
-                                ? users.map((i) => (
-                                    <tr>
+                                ? users.map((i, index) => (
+                                    <tr key={index}>
                                       <th scope="row">#{i.userID}</th>
 
                                       <td>{i.FullName}</td>

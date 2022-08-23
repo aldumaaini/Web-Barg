@@ -11,6 +11,7 @@ import Profile from "./auth/profile/reducer";
 import isAuthUser from "./auth/userAuth/reducer";
 import MemberShip from "./memberShip/reducer";
 //users
+import Transactions from "./Transactions/reducer";
 import Users from "./users/reducer";
 
 import Coupnes from "./coupons/reducer";
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   isAuthUser,
   Coupnes,
   MemberShip,
+  Transactions,
 });
 
 export default rootReducer;

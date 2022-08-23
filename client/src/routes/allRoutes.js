@@ -2,7 +2,8 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import UserProfile from "../pages/Authentication/user-profile";
 import Users from "pages/Admin/Users/Users";
-import Transactions from "pages/Admin/Transcations/Transactions";
+
+import TransactionsAdmin from "pages/Admin/Transcations/Transcations";
 import Loyalty from "pages/Admin/Loyalty/Loyalty";
 import LoginPage from "pages/Authentication/LoginPage";
 import Logout from "../pages/Authentication/Logout";
@@ -13,7 +14,7 @@ import Referral from "pages/Authentication/Referral";
 import DashboardUser from "pages/Dashboard";
 import Home from "../components/Home/Home";
 import TwostepVerification from "pages/Authentication/auth-two-step-verification";
-
+import Checkout from "pages/user/checkout/Checkout";
 import Pricing from "../pages/main/Pricing/Pricing";
 import Faq from "../pages/main/Faq/Faq";
 import Contact from "../pages/main/Contact/Contact";
@@ -26,13 +27,14 @@ const privateRoutes = [
   { path: "/dashboard", component: DashboardUser },
   { path: "/users-admin", component: Users },
   { path: "/profile", component: UserProfile },
-  { path: "/transactions-admin", component: Transactions },
+  { path: "/transactions-admin", component: TransactionsAdmin },
   { path: "/loyalty-admin", component: Loyalty },
   //user dashboard routes
   { path: "/coupons-admin", component: Coupons },
   { path: "/user-transactions", component: TranscationsUser },
   { path: "/user-membership", component: Memebership },
   { path: "/phone-number-verification", component: TwostepVerification },
+  { path: "/redirect", component: Checkout },
 ];
 
 const publicRoutes = [

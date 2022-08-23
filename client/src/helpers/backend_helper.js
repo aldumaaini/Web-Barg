@@ -16,11 +16,18 @@ const isUserAuthenticated = () => {
 };
 
 const getActiveUser = isUserAuthenticated();
-
 // Register Method
 const postRegister = (data) => post(url.POST_REGISTER, data);
 
 const getMemberShipValidation = () => get(url.MEMBERSHIP_VALIDATION);
+
+const getUserTransactions = () => get(url.GET_USER_TRANSACTIONS);
+//getAdminTransactions
+
+const getAdminTransactions = () => get(url.GET_ADMIN_TRANSACTIONS);
+
+const postUserSubscription = (data) =>
+  post(url.USER_MEMBERSHIP_SUBSCRIPTION, data);
 // Login Method
 const postLogin = (data) => post(url.POST_LOGIN, data);
 
@@ -49,7 +56,7 @@ export const addNewUser = (user) => post(url.ADD_NEW_USER, user);
 export const updateUser = (user) => put(url.UPDATE_USER, user);
 
 // delete User
-export const deleteUser = (id) => del(url.DELETE_USER, { headers: { id } });
+export const deleteUser = (id) => del(`${url.DELETE_USER}?id=${id}`);
 
 // get getCoupones
 export const getCoupones = () => get(url.GET_COUPONE);
@@ -58,8 +65,7 @@ export const getCoupones = () => get(url.GET_COUPONE);
 export const addNewCoupone = (coupone) => post(url.ADD_NEW_COUPONE, coupone);
 
 // delete deleteCoupone
-export const deleteCoupone = (id) =>
-  del(url.DELETE_COUPONE, { headers: { id } });
+export const deleteCoupone = (id) => del(`${url.DELETE_COUPONE}?id=${id}`);
 
 // get Categories
 export const getCategories = () => get(url.GET_CATEGORIES);
@@ -76,4 +82,7 @@ export {
   getActiveUser,
   getMemberShipValidation,
   postNewPassword,
+  postUserSubscription,
+  getUserTransactions,
+  getAdminTransactions,
 };

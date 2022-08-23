@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, CardBody, Col } from "reactstrap";
+import { Button, Card, CardBody, Col } from "reactstrap";
 import "./utility.css";
 
 const CardPricing = (props) => {
@@ -37,8 +37,8 @@ const CardPricing = (props) => {
               </h1>
             </div>
             <div className="d-grid mt-5">
-              <Link
-                to="#"
+              <Button
+                onClick={props.onSubscribePress}
                 className="btn btn-primary btn-block waves-effect waves-light"
                 style={{
                   backgroundColor: "rgb(13, 193, 67)",
@@ -46,7 +46,7 @@ const CardPricing = (props) => {
                 }}
               >
                 {props.pricing.buttonTitle}
-              </Link>
+              </Button>
             </div>
           </CardBody>
         </Card>

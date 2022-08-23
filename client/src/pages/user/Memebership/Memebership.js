@@ -1,30 +1,81 @@
 import React, { useEffect, useState } from "react";
 import MetaTags from "react-meta-tags";
-
-import { Redirect } from "react-router-dom";
+import axios from "axios";
+import { Redirect, useHistory } from "react-router-dom";
 import { Col, Container, Row, Card, CardBody, Alert } from "reactstrap";
 import Loader from "components/Loader";
 import CardPricing from "pages/Utility/card-pricing";
 import "./card.css";
+import { GoSell } from "@tap-payments/gosell";
 //Import Breadcrumbs
 import moment from "moment";
 import Breadcrumbs from "components/Common/Breadcrumb";
 import { useProfile, useRedux } from "hooks";
 import DeleteModal from "./DeleteModal";
-import { getMemeberShip } from "store/actions";
+import { getMemeberShip, userMemeberShipSubscription } from "store/actions";
 //css
 import Cards from "react-credit-cards";
 import "react-credit-cards/lib/styles.scss";
 const Memebership = (props) => {
+  const history = useHistory();
   const [deleteModal, setDeleteModal] = useState(false);
+  const [PaymentError, setPaymentError] = useState(null);
+  const [PaymentKey, setPaymentKey] = useState(null);
+  const [IsValiedToken, setIsValiedToken] = useState(false);
   const { userProfile } = useProfile();
   const { useAppSelector, dispatch } = useRedux();
 
-  const { error, success, memebershipvalidation } = useAppSelector((state) => ({
+  const {
+    error,
+    success,
+    memebershipvalidation,
+    subscriptionFail,
+    subscriptionSuccess,
+    loading,
+  } = useAppSelector((state) => ({
+    subscriptionSuccess: state.MemberShip.subscriptionSuccess,
+    subscriptionFail: state.MemberShip.subscriptionFail,
     success: state.MemberShip.success,
     error: state.MemberShip.error,
     memebershipvalidation: state.MemberShip.memebershipvalidation,
+    loading: state.MemberShip.loading,
   }));
+
+  useEffect(() => {
+    setTimeout(async () => {
+      let tokenString = localStorage.getItem("authToken");
+
+      try {
+        const userToken = JSON.parse(tokenString);
+        await axios
+          .get("/api/paymentKeys", {
+            headers: { "x-auth-token": userToken },
+          })
+          .then((res) => {
+            setPaymentKey(res?.data?.PayemntKey);
+            setIsValiedToken(true);
+          })
+          .catch((err) => {
+            setIsValiedToken(false);
+          });
+      } catch (err) {
+        setIsValiedToken(false);
+      }
+    }, 100);
+  }, []);
+
+  useEffect(() => {
+    if (props?.location?.state) {
+      if (props.location.state.subscriptionStatus === true) {
+        dispatch(userMemeberShipSubscription(props.location.state.data));
+        setPaymentError(false);
+        history.replace();
+      } else {
+        setPaymentError(true);
+        history.replace();
+      }
+    }
+  }, []);
 
   useEffect(() => {
     dispatch(getMemeberShip());
@@ -33,6 +84,12 @@ const Memebership = (props) => {
   if (userProfile && userProfile.isPhoneVerified === 0) {
     return <Redirect to={{ pathname: "/phone-number-verification" }} />;
   }
+
+  const handlePrepareForPayment = () => {
+    GoSell.openLightBox();
+  };
+  const callbackFunc = (response) => {};
+  const onPopupClosed = (response) => {};
   const pricings = [
     {
       id: 2,
@@ -50,10 +107,11 @@ const Memebership = (props) => {
       ],
     },
   ];
+
   /**
    * On delete event
    */
-
+  if (loading === true) return <Loader />;
   return (
     <React.Fragment>
       <DeleteModal
@@ -78,6 +136,23 @@ const Memebership = (props) => {
             </Row>
           </div>
           <Row>
+            {PaymentError === true && (
+              <Alert color="danger">Payment failed, please contact us</Alert>
+            )}
+            {PaymentError === false && (
+              <Alert color="success">Payment success</Alert>
+            )}
+            {subscriptionFail !== false && (
+              <Alert color="danger">
+                Subscription proccess failed, please contact us
+              </Alert>
+            )}
+            {subscriptionSuccess !== false && (
+              <Alert color="success">
+                Congrats, now you can enjoy unlimited use of the extention
+              </Alert>
+            )}
+
             {error !== null ? (
               error.code === 100 ? (
                 error.planType === "Free" ? (
@@ -127,9 +202,9 @@ const Memebership = (props) => {
                       <Cards
                         locale={{ valid: "Expires" }}
                         cvc={"333"}
-                        expiry={moment(userProfile.PlanExpireDate).format(
-                          "MM/DD"
-                        )}
+                        expiry={moment(
+                          memebershipvalidation.PlanExpiryDate
+                        ).format("MM/DD")}
                         // expiryyear={"2022"}
                         focused={true}
                         name={userProfile.FullName}
@@ -167,10 +242,10 @@ const Memebership = (props) => {
 
                               <td>{userProfile.FullName}</td>
                               <td>
-                                {userProfile.planType === "Free" ? (
+                                {memebershipvalidation.planType === "Free" ? (
                                   <h4 className="badge bg-success">
                                     {" "}
-                                    {userProfile.planType}
+                                    {memebershipvalidation.planType}
                                   </h4>
                                 ) : (
                                   <h4 className="badge bg-warning"> Premium</h4>
@@ -178,24 +253,27 @@ const Memebership = (props) => {
                               </td>
                               <td>
                                 <h4 className="badge bg-danger">
-                                  {moment(userProfile.PlanExpireDate).fromNow()}
+                                  {moment(
+                                    memebershipvalidation.PlanExpiryDate
+                                  ).fromNow()}
                                 </h4>
                               </td>
                               <td>
-                                {userProfile.planStatus === "active" ? (
+                                {memebershipvalidation.status === "active" ? (
                                   <h4 className="badge bg-success">
-                                    {userProfile.planStatus}
+                                    {memebershipvalidation.info}
                                   </h4>
                                 ) : (
                                   <h4 className="badge bg-warning">
-                                    {userProfile.planStatus}
+                                    {memebershipvalidation.status}
                                   </h4>
                                 )}
                               </td>
                               <td>
                                 <h4>
-                                  {userProfile.planType === "Free"
-                                    ? 100 - userProfile.totalUsedMessage
+                                  {memebershipvalidation.planType === "Free"
+                                    ? 100 -
+                                      memebershipvalidation.totalUsedMessage
                                     : "∞"}
                                 </h4>
                               </td>
@@ -208,28 +286,126 @@ const Memebership = (props) => {
                 </Col>
               </Row>
             </Col>
-            <Col className="col-12">
-              <Row>
-                <Col>
-                  <Card>
-                    <CardBody style={{ paddingTop: 30, paddingBottom: 50 }}>
-                      <h4 className="card-title mb-4">Subscribe</h4>
-                      <Container fluid>
-                        <Row>
-                          {pricings.map((pricing, key) => (
-                            <CardPricing
-                              pricing={pricing}
-                              key={"_pricing_" + key}
-                            />
-                          ))}
-                        </Row>
-                      </Container>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
-            </Col>
+            {memebershipvalidation.planType === "Free" ||
+            (memebershipvalidation.planType === "Paid" &&
+              memebershipvalidation.info !== "active") ? (
+              <Col className="col-12">
+                <Row>
+                  <Col>
+                    <Card>
+                      <CardBody style={{ paddingTop: 30, paddingBottom: 50 }}>
+                        <h4 className="card-title mb-4">Subscribe</h4>
+                        <Container fluid>
+                          {IsValiedToken ? (
+                            <Row>
+                              {pricings.map((pricing, key) => (
+                                <CardPricing
+                                  onSubscribePress={() =>
+                                    handlePrepareForPayment()
+                                  }
+                                  pricing={pricing}
+                                  key={"_pricing_" + key}
+                                />
+                              ))}
+                            </Row>
+                          ) : (
+                            <h4>Opss, something went wrong, reload the page</h4>
+                          )}
+                        </Container>
+                      </CardBody>
+                    </Card>
+                  </Col>
+                </Row>
+              </Col>
+            ) : null}
           </Row>
+          <GoSell
+            gateway={{
+              publicKey: PaymentKey,
+              language: "ar",
+              contactInfo: true,
+              supportedCurrencies: ["SAR", "USD", "EUR"],
+              supportedPaymentMethods: [
+                "AMERICAN_EXPRESS",
+                "MADA",
+                "VISA",
+                "MASTERCARD",
+                "APPLE_PAY",
+              ],
+              saveCardOption: true,
+              customerCards: true,
+              notifications: "standard",
+              callback: callbackFunc,
+              onClose: onPopupClosed,
+              labels: {
+                cardNumber: "Card Number",
+                expirationDate: "MM/YY",
+                cvv: "CVV",
+                cardHolder: "Name on Card",
+                actionButton: "Pay",
+              },
+              style: {
+                base: {
+                  color: "#535353",
+                  lineHeight: "18px",
+                  fontFamily: "sans-serif",
+                  fontSmoothing: "antialiased",
+                  fontSize: "16px",
+                  "::placeholder": {
+                    color: "rgba(0, 0, 0, 0.26)",
+                    fontSize: "15px",
+                  },
+                },
+                invalid: {
+                  color: "red",
+                  iconColor: "#fa755a ",
+                },
+              },
+            }}
+            customer={{
+              first_name: userProfile.FullName,
+              email: userProfile.email,
+              phone: {
+                country_code: "+",
+                number: userProfile.phone,
+              },
+            }}
+            order={{
+              amount: 375,
+              currency: "SAR",
+              items: [
+                {
+                  id: 1,
+                  name: "Premium subscription",
+                  description:
+                    "whatsapp barg premium subscription for one month",
+                  quantity: "1",
+                  amount_per_unit: "375",
+                  discount: {
+                    type: "P",
+                    value: "0%",
+                  },
+                  total_amount: "375.00",
+                },
+              ],
+              shipping: null,
+              taxes: null,
+            }}
+            transaction={{
+              mode: "charge",
+              charge: {
+                saveCard: true,
+                threeDSecure: true,
+                metadata: {},
+                receipt: {
+                  email: true,
+                  sms: false,
+                },
+                redirect: "http://localhost:3001/redirect",
+                post: "http://localhost:3000/api/callbackTap",
+              },
+            }}
+          />
         </Container>
       </div>
     </React.Fragment>

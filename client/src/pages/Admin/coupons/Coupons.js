@@ -309,8 +309,8 @@ const Coupones = (props) => {
                             </thead>
                             <tbody>
                               {!loading && coupones
-                                ? coupones.map((i) => (
-                                    <tr>
+                                ? coupones.map((i, index) => (
+                                    <tr key={index}>
                                       <th scope="row">#{i.id}</th>
 
                                       <td>{i.name}</td>
