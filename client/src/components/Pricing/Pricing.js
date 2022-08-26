@@ -11,11 +11,10 @@ const Pricing = () => {
       <div className="container">
         <div className="top-content">
           <div>
-            <h2>
-            {t('Choose your plan to')} <span> {t('Enjoy the App features')} </span>
-            </h2>
-            <p>
-            {t('Plans Desc')} 
+            <h2> <strong>
+              {t('Choose your favourite plan to')} <span> <b>  {t('enjoy WhatsApp Barg features')} </b></span>
+            </strong></h2>
+            <p> <strong> {t('All what you need fro your marketing needs in one place')}</strong>
             </p>
           </div>
         </div>

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Input, Label, FormFeedback } from "reactstrap";
 import classNames from "classnames";
+import { useTranslation } from 'react-i18next';
 
 /* Password Input */
 const PasswordInput = ({
@@ -14,6 +15,7 @@ const PasswordInput = ({
   hidePasswordButton,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
+
 
   return (
     <>
@@ -73,6 +75,7 @@ const FormInput = ({
   hidePasswordButton,
   ...otherProps
 }) => {
+  const { t , i18n} = useTranslation();
   return (
     <>
       {type === "hidden" ? (
@@ -91,7 +94,7 @@ const FormInput = ({
                   {!withoutLabel && (
                     <div className="float-end">
                       <a href="forgot-password" className="text-muted">
-                        Forgot password?
+                     {t ('Forgot password?')} 
                       </a>
                     </div>
                   )}

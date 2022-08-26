@@ -14,6 +14,7 @@ import NonAuthLayoutWrapper from "../../components/NonAutnLayoutWrapper";
 import AuthHeader from "../../components/AuthHeader";
 import FormInput from "../../components/FormInput";
 import Loader from "components/Loader";
+import { useTranslation } from 'react-i18next';
 
 const ChangePassword = (props) => {
   const { token } = useParams();
@@ -59,6 +60,7 @@ const ChangePassword = (props) => {
   };
 
   // const { userProfile, loading } = useProfile();
+  const { t } = useTranslation();
 
   return (
     <NonAuthLayoutWrapper>
@@ -119,7 +121,7 @@ const ChangePassword = (props) => {
                       type="submit"
                       disabled={newPasswordPassLoading ? true : false}
                     >
-                      Reset password
+                      {t ("Reset password")}
                     </button>
                   </div>
                 </div>

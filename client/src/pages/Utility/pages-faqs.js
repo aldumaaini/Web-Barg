@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import MetaTags from "react-meta-tags";
+import { initReactI18next, useTranslation } from 'react-i18next';
 
 import {
   Container,
@@ -13,9 +14,10 @@ import {
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import "./utility.css";
+
 
 const PagesFaqs = () => {
+  const { t , i18n} = useTranslation();
   const [faq1, setFaq1] = useState(true);
   const [faq2, setFaq2] = useState(false);
   const [faq3, setFaq3] = useState(false);
@@ -31,7 +33,7 @@ const PagesFaqs = () => {
         <MetaTags>
           <title>FAQs </title>
         </MetaTags>
-        <Container fluid>
+        <Container >
           {/* Render Breadcrumbs */}
 
           <Row>
@@ -50,7 +52,7 @@ const PagesFaqs = () => {
                       <div className="pt-3 pb-3" style={{ paddingRight: 10 }}>
                         <i className="ti-comments  h3"></i>
                       </div>
-                      <h2>Frequently asked questions</h2>
+                      <h2> <strong> {t ('Frequently asked questions')}</strong></h2>
                     </div>
                   </Row>
 
@@ -61,7 +63,7 @@ const PagesFaqs = () => {
                           className="ti-agenda text-primary me-2"
                           style={{ color: "rgb(13, 193, 67)" }}
                         ></i>{" "}
-                        General Questions
+                       {t ('General Questions')} 
                       </h5>
                       <div className="accordion" id="accordionExample">
                         <div className="accordion-item">
@@ -73,7 +75,7 @@ const PagesFaqs = () => {
                                 setFaq1(!faq1);
                               }}
                             >
-                              How to Open Account in Whatsapp Barg
+                             {t ('How to Open Account in Whatsapp Barg')}
                             </button>
                           </div>
                           <Collapse
@@ -82,9 +84,7 @@ const PagesFaqs = () => {
                           >
                             <div className="accordion-body">
                               <p className="text-muted mb-0">
-                                You biol the hell out of it. Lorem ipsum dolor
-                                sit amet. Lorem ipsum dolor sit amet. Lorem
-                                ipsum dolor sit amet.
+                              {t ('Everyone realizes why a new common language would be desirable one could refuseto pay expensive translators. Toachieve this, it would be necessary to have uniform grammar')} 
                               </p>
                             </div>
                           </Collapse>
@@ -100,7 +100,7 @@ const PagesFaqs = () => {
                                 setFaq3(!faq3);
                               }}
                             >
-                              How to Open Account in Whatsapp Barg
+                              {t ('How to Open Account in Whatsapp Barg')}
                             </button>
                           </div>
                           <Collapse
@@ -109,9 +109,7 @@ const PagesFaqs = () => {
                           >
                             <div className="accordion-body">
                               <p className="text-muted mb-0">
-                                You biol the hell out of it. Lorem ipsum dolor
-                                sit amet. Lorem ipsum dolor sit amet. Lorem
-                                ipsum dolor sit amet.
+                              {t ('Everyone realizes why a new common language would be desirable one could refuseto pay expensive translators. Toachieve this, it would be necessary to have uniform grammar')} 
                               </p>
                             </div>
                           </Collapse>
@@ -127,7 +125,7 @@ const PagesFaqs = () => {
                                 setFaq2(!faq2);
                               }}
                             >
-                              How to Open Account in Whatsapp Barg
+                              {t ('How to Open Account in Whatsapp Barg')}
                             </button>
                           </div>
                           <Collapse
@@ -136,9 +134,7 @@ const PagesFaqs = () => {
                           >
                             <div className="accordion-body">
                               <p className="text-muted mb-0">
-                                You biol the hell out of it. Lorem ipsum dolor
-                                sit amet. Lorem ipsum dolor sit amet. Lorem
-                                ipsum dolor sit amet.
+                              {t ('Everyone realizes why a new common language would be desirable one could refuseto pay expensive translators. Toachieve this, it would be necessary to have uniform grammar')} 
                               </p>
                             </div>
                           </Collapse>
@@ -152,7 +148,7 @@ const PagesFaqs = () => {
                           className="ti-bookmark-alt text-primary me-2"
                           style={{ color: "rgb(13, 193, 67)" }}
                         ></i>{" "}
-                        Pricing & Plans
+                       {t('Pricing & Plans')}
                       </h5>
                       <div className="accordion" id="accordionExample2">
                         <div className="accordion-item">
@@ -164,7 +160,7 @@ const PagesFaqs = () => {
                                 setFaq5(!faq5);
                               }}
                             >
-                              Where can I get some?
+                               {t ('How to Open Account in Whatsapp Barg')}
                             </button>
                           </div>
                           <Collapse
@@ -173,10 +169,7 @@ const PagesFaqs = () => {
                           >
                             <div className="accordion-body">
                               <p className="text-muted mb-0">
-                                The new common language will be more simple and
-                                regular than the existing European languages. It
-                                will be as simple as Occidental; in fact, it
-                                will be Occidental.
+                              {t ('Everyone realizes why a new common language would be desirable one could refuseto pay expensive translators. Toachieve this, it would be necessary to have uniform grammar')} 
                               </p>
                             </div>
                           </Collapse>
@@ -191,7 +184,7 @@ const PagesFaqs = () => {
                                 setFaq6(!faq6);
                               }}
                             >
-                              Why do we use it?
+                              {t ('How to Open Account in Whatsapp Barg')}
                             </button>
                           </div>
                           <Collapse
@@ -200,10 +193,7 @@ const PagesFaqs = () => {
                           >
                             <div className="accordion-body">
                               <p className="text-muted mb-0">
-                                Everyone realizes why a new common language
-                                would be desirable: one could refuse to pay
-                                expensive translators. To achieve this, it would
-                                be necessary to have uniform grammar.
+                              {t ('Everyone realizes why a new common language would be desirable one could refuseto pay expensive translators. Toachieve this, it would be necessary to have uniform grammar')} 
                               </p>
                             </div>
                           </Collapse>
@@ -215,10 +205,10 @@ const PagesFaqs = () => {
                               className="accordion-button font-size-15 faq collapsed"
                               type="button"
                               onClick={() => {
-                                setFaq5(!faq7);
+                                setFaq7(!faq7);
                               }}
                             >
-                              Where does it come from?
+                             {t ('How to Open Account in Whatsapp Barg')}
                             </button>
                           </div>
                           <Collapse
@@ -227,10 +217,7 @@ const PagesFaqs = () => {
                           >
                             <div className="accordion-body">
                               <p className="text-muted mb-0">
-                                If several languages coalesce, the grammar of
-                                the resulting language is more simple and
-                                regular than that of the individual languages.
-                                The new common language will be more simple.
+                              {t ('Everyone realizes why a new common language would be desirable one could refuseto pay expensive translators. Toachieve this, it would be necessary to have uniform grammar')} 
                               </p>
                             </div>
                           </Collapse>
@@ -242,10 +229,10 @@ const PagesFaqs = () => {
                               className="accordion-button font-size-15 faq collapsed"
                               type="button"
                               onClick={() => {
-                                setFaq5(!faq8);
+                                setFaq8(!faq8);
                               }}
                             >
-                              What is Lorem Ipsum?
+                             {t ('How to Open Account in Whatsapp Barg')}
                             </button>
                           </div>
                           <Collapse
@@ -254,10 +241,8 @@ const PagesFaqs = () => {
                           >
                             <div className="accordion-body">
                               <p className="text-muted mb-0">
-                                Everyone realizes why a new common language
-                                would be desirable one could refuse to pay
-                                expensive translators. Toachieve this, it would
-                                be necessary to have uniform grammar.
+                              {t ('Everyone realizes why a new common language would be desirable one could refuseto pay expensive translators. Toachieve this, it would be necessary to have uniform grammar')}
+                             
                               </p>
                             </div>
                           </Collapse>

@@ -94,7 +94,7 @@ const LoginPage = (props) => {
         <Col sm={8} lg={6} xl={5} className="col-xxl-4">
           <div className="py-md-5 py-4">
             <AuthHeader
-              title={t ('Welcome Back!')}
+              title= {t ('Welcome Back!')}
               subtitle={t ('Sign in to continue to Whatsapp Barg')}
             />
 
@@ -157,13 +157,13 @@ const LoginPage = (props) => {
                   className="w-100 btnLogin"
                   type="submit"
                 >
-                  Log In
+                 {t ('Login')} 
                 </Button>
               </div>
             </Form>
 
             <div className="mt-5 text-center text-muted">
-              <p>
+              <p> <b> 
               {t ("You don't have an account?")} {" "}
                 <Link
                   to="/register"
@@ -172,7 +172,7 @@ const LoginPage = (props) => {
                   {" "}
                   {t ('Register')}
                 </Link>
-              </p>
+                </b> </p>
             </div>
           </div>
         </Col>

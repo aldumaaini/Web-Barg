@@ -230,7 +230,7 @@ const DashboardUser = (props) => {
                       </h5>
                       <h4 className="fw-medium font-size-24">
                         {" SAR "}
-                        {totalRevenue.toFixed(2)}{" "}
+                        {totalRevenue?.toFixed(2)}{" "}
                       </h4>
                     </div>
                   </CardBody>

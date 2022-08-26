@@ -2,7 +2,6 @@ import React from "react";
 import MetaTags from "react-meta-tags";
 import { Row, Card, CardBody, Container } from "reactstrap";
 import { Link } from "react-router-dom";
-import "./utility.css";
 import moment from "moment";
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";

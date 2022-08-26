@@ -13,22 +13,22 @@ export const Contact = () => {
         <div className="col-1">
           <div className="content">
             <div>
-              <h2> {t ('Get in touch')}</h2>
-              <p>
-              {t ('Get In Touch Desc')}
+              <h2> <b>{t ('Get in touch')} </b> </h2>
+              <p> <b>  {t ('We are available 24/7 for your support')}</b>
+             
               </p>
             </div>
             <div className="icons">
               <FaMap style={{ marginRight: "1rem" }} />
-              <p className="p-title"> {t ('Address')}</p>
+              <p className="p-title"> <b> {t ('KSA - Riyadh')}</b> </p>
             </div>
             <div className="icons">
               <FaMobileAlt style={{ marginRight: "1rem" }} />
-              <p className="p-title">+966 123 456 857</p>
+              <p className="p-title"><b> +966 123 456 857</b></p>
             </div>
             <div className="icons">
               <FaEnvelope style={{ marginRight: "1rem" }} />
-              <p className="p-title">info@w-barg.com</p>
+              <p className="p-title"><b>info@w-barg.com</b></p>
             </div>
 
           </div>
@@ -44,14 +44,7 @@ export const Contact = () => {
               cols="30"
               rows="10"
             ></textarea>
-            {/* <div className="checkbox">
-              <input type="checkbox" />
-              <p>
-              {t("Contact Form Msg")}  
-                <span>{t("Privacy Policy")} </span> {t("and")} 
-                <span>{t("Cookie Policy")}</span>
-              </p>
-            </div> */}
+          
             <button>{t("Submit")}</button>
           </form>
         </div>
