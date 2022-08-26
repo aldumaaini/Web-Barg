@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 
 const RegisterPage = (props) => {
   // global store
+  
   const { dispatch, useAppSelector } = useRedux();
   const [phone, setphone] = React.useState("");
   const [ReferralCode, setReferralCode] = React.useState(null);

@@ -102,12 +102,12 @@ const TwostepVerification = () => {
                           </p>
                         ) : (
                           <p className="mb-5">
-                            PLese verify{" "}
+                            PLese verify
                             {
                               <span style={{ fontWeight: "bold" }}>
                                 {userProfile.phone}
                               </span>
-                            }{" "}
+                            }
                             by requesting OTP
                           </p>
                         )}
