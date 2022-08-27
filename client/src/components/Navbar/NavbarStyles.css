@@ -7,8 +7,10 @@ header {
   background-color: #4eac6d;
   position: sticky;
   top: 0;
+  overflow: inherit;
   font-family: 'Lato', sans-serif;
   font-family: 'Noto Kufi Arabic', sans-serif;
+  /* direction: rtl; */
 }
 
 header .navbarr {

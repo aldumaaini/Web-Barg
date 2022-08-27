@@ -68,7 +68,7 @@ const Footer = () => {
         </div>
         <div className="col-subscribe">
           <h6> {t('Subscribe to our newsletter')} </h6>
-          <p> {t('The latest news, articles, and resources are sent to your inbox')}</p>
+          <p><b> {t('The latest news, articles, and resources are sent to your inbox')} </b></p>
           <div className="subscribe">
             <input type="email" placeholder={t('Enter your email')}  />
             <button> {t('Subscribe')} </button>
@@ -78,7 +78,7 @@ const Footer = () => {
         <div className='col support'>
           <h6>{t('About WhatsApp Barq')}</h6>
           <ul>
-            <p> {t('your soltuion to expand your business')} </p>
+            <p> <b>{t('your soltuion to expand your business')} </b></p>
     
           </ul>
           
@@ -88,17 +88,18 @@ const Footer = () => {
       <div className="footer-bottom">
         <div className="content">
           <div className="rights">
-            <p>&copy; {t('CopyWrite. All rights reserved for WHATSAPP BARG 2022')}  </p>
+          <p>&copy;  <b> {t('CopyWrite. All rights reserved for WHATSAPP BARG 2022')} </b> </p>
           </div>
           <div>
+            <a href="http://www.facebook.com" target="_blank" >
             <FaFacebook
               size={20}
               style={{ color: "#d3d3d3", marginRight: "10px" }}
-            />
-            <FaInstagram
+            /></a>
+             <a href="http://www.instagram.com" target="_blank" > <FaInstagram
               size={20}
               style={{ color: "#d3d3d3", marginRight: "10px" }}
-            />
+            /></a>
             <FaTwitter
               size={20}
               style={{ color: "#d3d3d3", marginRight: "10px" }}

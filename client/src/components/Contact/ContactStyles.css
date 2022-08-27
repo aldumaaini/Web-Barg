@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic&display=swap');
+
+
 .contact {
   width: 100%;
   margin: 3rem 0;
   display: flex;
+  font-family: 'Noto Sans Arabic', sans-serif;
   
 }
 
@@ -49,6 +53,10 @@
 .contact .col-2 {
   flex: 1 0 55%;
   padding: 5rem 2rem;
+  font-family: 'Noto Sans Arabic', sans-serif;
+}
+.contact .col-2 textarea {
+  font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
 .contact form {
@@ -75,12 +83,7 @@
   font-family: "Montserrat", sans-serif;
 }
 
-.contact form .checkbox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 0;
-}
+
 
 .contact .checkbox input {
   margin: 0;
@@ -88,7 +91,15 @@
 }
 
 @media screen and (max-width: 960px) {
+
   .contact {
+    width: 100%;
+    margin: 3rem 0;
+    display: flex;
+    font-family: 'Noto Sans Arabic', sans-serif;
+    
+  }
+  /* .contact {
     margin: 1rem 0;
   }
 
@@ -102,5 +113,5 @@
 
   .contact .col-2 {
     padding: 1rem;
-  }
+  } */
 }

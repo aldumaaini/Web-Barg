@@ -4,7 +4,7 @@ import MetaTags from "react-meta-tags";
 
 import CardPricing from "./card-pricing";
 import { useTranslation } from 'react-i18next';
-import "./utility.css";
+
 
 
 
@@ -15,32 +15,32 @@ const PagesPricing = () => {
   const pricings = [
     {
       id: 1,
-      title:  t('FREE'),
-      description: t('free trial plan'),
+      title: <b> {t('FREE')}</b>,
+      description:<b> {t('free trial plan')}</b>,
       icon: "ion ion-ios-gift",
-      buttonTitle:t("TRY IT FREE"), 
-      price: t('0.00'),
-      duration: t("Per month"),
+      buttonTitle:<b> {t("TRY IT FREE")} </b>, 
+      price: <b> {t('0.00')}</b>,
+      duration: <b> {t("Per month")}</b>,
       link: "",
       features: [
-        { icon: "mdi mdi-check", title: t("Free 100 messages")},
-        { icon: "mdi mdi-check", title: t("One month") },
-        { icon: "mdi mdi-close", title: t("24/7 Support") },
+        { icon: "mdi mdi-check", title: <b>{t("Free 100 messages")}</b>},
+        { icon: "mdi mdi-check", title: <b>{t("One month")}</b> },
+        { icon: "mdi mdi-close", title: <b>{t("24/7 Support")}</b> },
       ],
     },
     {
       id: 2,
-      title: t('PREMIUM'),
-      description:t('Premium plan with unlimited features'),
-      buttonTitle:t('SUBSCRIBE'),
+      title:<b> {t('PREMIUM')}</b> ,
+      description: <b> {t('Premium plan with unlimited features')}</b>,
+      buttonTitle:<b> {t('SUBSCRIBE')}</b>,
       icon: "ion ion-ios-trophy",
       price: "100",
-      duration: t("Per month"),
+      duration:<b> {t("Per month")}</b>,
       link: "",
       features: [
-        { icon: "mdi mdi-check", title: t("6000 messages") },
-        { icon: "mdi mdi-check", title: t("Per month"),},
-        { icon: "mdi mdi-check", title: t("24/7 Support")  },
+        { icon: "mdi mdi-check", title: <b> {t("6000 messages")}</b> },
+        { icon: "mdi mdi-check", title: <b>{t("One month")}</b> },
+        { icon: "mdi mdi-check", title: <b>{t("24/7 Support")}</b>  },
       ],
     },
   ];

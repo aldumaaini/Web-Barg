@@ -107,14 +107,14 @@ const RecoverPassword = (props) => {
                   {/*forgetPassLoading && <Loader />*/}
                   <div className="mb-3">
                     <FormInput
-                      label="Email  "
+                      label={t ("Email")} 
                       type="email"
                       name="email"
                       register={register}
                       errors={errors}
                       control={control}
                       labelClassName="form-label"
-                      placeholder="Enter E-mail address "
+                      placeholder={t ("Enter Your Email")}  
                       className="form-control"
                     />
                   </div>
@@ -126,19 +126,19 @@ const RecoverPassword = (props) => {
                       type="submit"
                       disabled={forgetPassLoading ? true : false}
                     >
-                      Reset
+                     {t ("Reset")}   
                     </Button>
                   </div>
                 </Form>
                 <div className="mt-5 text-center text-muted">
-                  <p>
-                    Remember It ?{" "}
+                  <p> <b> {t ("Remember It ?")}  </b>
+                 
                     <Link
                       to="/login"
                       className="fw-medium text-decoration-underline"
                     >
-                      {" "}
-                      Login
+                     
+                      {t ("Login")}   
                     </Link>
                   </p>
                 </div>
@@ -151,14 +151,14 @@ const RecoverPassword = (props) => {
                 >
                   <div className="mb-3">
                     <FormInput
-                      label="Phone Number"
+                      label={t ("Phone Number")} 
                       type="text"
                       name="phone"
                       register={register}
                       errors={errors}
                       control={control}
                       labelClassName="form-label"
-                      placeholder="Enter Phone number  i.e: 966509336310"
+                      placeholder={t ("Enter Your Mobile:966509336310")} 
                       className="form-control"
                     />
                   </div>
@@ -169,19 +169,18 @@ const RecoverPassword = (props) => {
                       type="submit"
                       disabled={forgetPassLoading ? true : false}
                     >
-                      Reset
+                     {t ("Reset")}   
                     </Button>
                   </div>
                 </Form>
                 <div className="mt-5 text-center text-muted">
                   <p>
-                    Remember It ?{" "}
+                  <b> {t ("Remember It ?")}  </b>
                     <Link
                       to="/login"
                       className="fw-medium text-decoration-underline"
                     >
-                      {" "}
-                      Login
+                    {t ("Login")}   
                     </Link>
                   </p>
                 </div>

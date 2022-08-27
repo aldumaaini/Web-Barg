@@ -1,13 +1,15 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Card, CardBody, Col } from "reactstrap";
-import "./utility.css";
+import { Button, Card, CardBody, Col, Container } from "reactstrap";
+import { useTranslation } from 'react-i18next';
 
 const CardPricing = (props) => {
+  const { t } = useTranslation();
   return (
+  
     <React.Fragment>
-      <Col xl="4" md="6">
+      <Col xl="6" md="6">
         <Card className="pricing-box">
           <CardBody className="p-4">
             <div className="d-flex mt-2" style={{ flexDirection: "row" }}>
@@ -28,7 +30,7 @@ const CardPricing = (props) => {
             <div className="text-center mt-5">
               <h1 className="mb-0">
                 <sup>
-                  <small>$</small>
+                  <small>{t("Sar")}</small>
                 </sup>
                 {props.pricing.price}/
                 <span className="font-size-16" style={{ color: "#000" }}>
@@ -52,6 +54,7 @@ const CardPricing = (props) => {
         </Card>
       </Col>
     </React.Fragment>
+ 
   );
 };
 

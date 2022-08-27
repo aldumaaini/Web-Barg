@@ -58,7 +58,7 @@ const Navbar = () => {
               <Button type="button" class="btn btn-Warning btn-default">
 
                 <Link to="/login" className="nav-link">
-                  {t('Sign in')}
+                  {t('Login')}
                 </Link>
               </Button>
 

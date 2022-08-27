@@ -5,7 +5,7 @@ import PagesFaqs from "pages/Utility/pages-faqs";
 const Faq = () => {
   return (
     <>
-      <PagesFaqs />
+      <PagesFaqs/>
 
       {/* <div className="section-faq">
         <div className="container">

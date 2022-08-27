@@ -33,7 +33,11 @@ router.post("/register-new-account", async function (req, res) {
     "SELECT COUNT(*) AS PhoneCount FROM users WHERE phone=?",
     [phone],
     async function (err, results) {
-      if (err) res.status(500).send(ResponseHandler(500, null, null));
+      if (err){
+        res.status(500).send(ResponseHandler(500, null, null));
+        console.log(err); 
+      } 
+      
       else {
         var phoneCount = results[0].PhoneCount;
         if (phoneCount === 1) {
@@ -47,7 +51,9 @@ router.post("/register-new-account", async function (req, res) {
             "SELECT COUNT(*) AS EmailCount FROM users WHERE email=?",
             [email],
             async function (err, results) {
-              if (err) res.status(500).send(ResponseHandler(500, null, null));
+              if (err) {
+                res.status(500).send(ResponseHandler(500, null, null));
+                console.log(err); }
               else {
                 var emailCount = results[0].EmailCount;
                 if (emailCount === 1) {
@@ -106,10 +112,13 @@ router.post("/register-new-account", async function (req, res) {
                                     memeberShipNumber,
                                   ],
                                   function (err, results) {
-                                    if (err)
+                                    if (err) {
                                       res
-                                        .status(500)
-                                        .send(ResponseHandler(500, null, null));
+                                      .status(500)
+                                      .send(ResponseHandler(500, null, null));
+                                      console.log(err); 
+                                    }
+                                      
                                     else {
                                       CON.query(
                                         "INSERT INTO usersReferrals( userReferredToId,userRefferedFromCode)VALUES(?,?)",
@@ -164,7 +173,10 @@ router.post("/add-new-coupons-admin", verifyJWT, async function (req, res) {
     "INSERT INTO Coupons( name,description,numOfUse, expire,type,percentage, fixedAmount)VALUES(?,?,?,?,?,?,?)",
     [name, description, numofuse, expire, type, percentage, fixedamount],
     function (err, results) {
-      if (err) res.status(500).send(ResponseHandler(500, null, null));
+      if (err){
+        res.status(500).send(ResponseHandler(500, null, null));
+        console.log(err)
+      } 
       else {
         if (results.affectedRows > 0) {
           let data = {
