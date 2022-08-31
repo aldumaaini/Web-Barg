@@ -26,13 +26,19 @@ import { useForm } from "react-hook-form";
 //Import Breadcrumb
 import { useProfile, useRedux } from "hooks";
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
-import { addNewCoupon, deleteCoupon, getCoupons } from "store/coupons/actions";
+import {
+  addNewCoupon,
+  deleteCoupon,
+  getCoupons,
+  getUsers,
+} from "store/actions";
 import DeleteModal from "./DeleteModal";
 //css
 import Loader from "components/Loader";
-
+import UsersDropDown from "./UsersDropDown";
 const Coupones = (props) => {
-  const [modal, setModal] = useState(false);
+  const [SelectedUser, setSelectedUser] = useState(null);
+
   const [value, onChange] = useState(new Date());
   const [deleteModal, setDeleteModal] = useState(false);
   const [event, setEvent] = useState({});
@@ -42,21 +48,33 @@ const Coupones = (props) => {
   const { dispatch, useAppSelector } = useRedux();
   // const storeStates = useAppSelector((state) => state);
 
-  const { coupones, error, loading, success, message } = useAppSelector(
+  const { coupones, error, loading, success, message, users } = useAppSelector(
     (state) => ({
       error: state.Coupnes.error,
       coupones: state.Coupnes.coupones,
       message: state.Coupnes.message,
       loading: state.Coupnes.loading,
       success: state.Coupnes.success,
+      users: state.Users.users,
     })
   );
+
+  let couponesData = coupones.map((i) => ({
+    id: i.id,
+    name: i.name,
+    description: i.description,
+    numOfUse: i.numOfUse,
+    type: i.type,
+    expire: i.expire,
+    percentage: i.percentage,
+    fixedAmount: i.fixedAmount,
+    user: users.filter((t) => t.userID === i.userId),
+  }));
 
   const resolver = yupResolver(
     yup.object().shape({
       name: yup.string().required("Please Enter coupone name."),
       description: yup.string().required("Please Enter coupone description."),
-      // type: yup.string().required("Please select copone type."),
       expire: yup
         .string()
         .required("Please Enter expire date for this coupon."),
@@ -75,15 +93,14 @@ const Coupones = (props) => {
   } = methods;
 
   const onSubmitForm = (values) => {
-    let valuess = { ...values, type: RadioValue };
+    let valuess = { ...values, type: RadioValue, userId: SelectedUser };
 
     dispatch(addNewCoupon(valuess));
-    // let registrationData = { ...values, phone };
-    // dispatch(registerUser(registrationData));
   };
   useEffect(() => {
     setTimeout(() => {
       dispatch(getCoupons());
+      dispatch(getUsers());
     }, 100);
   }, [success]);
 
@@ -95,15 +112,10 @@ const Coupones = (props) => {
     }
   }, [coupones]);
 
-  /**
-   * On delete event
-   */
-
   const onChangeValue = (event) => {
     setRadioValue(event.target.value);
   };
 
-  const handleOnEdit = () => {};
   const handleOnDelete = (id) => {
     setDeleteId(id);
     setDeleteModal(true);
@@ -115,6 +127,9 @@ const Coupones = (props) => {
     dispatch(deleteCoupon(DeleteId));
     setDeleteModal(false);
   };
+
+  const onOptionsListSelected = (user) => setSelectedUser(user.value);
+
   if (loading) return <Loader />;
   return (
     <React.Fragment>
@@ -271,6 +286,16 @@ const Coupones = (props) => {
                       />
                     </div>
                   ) : null}
+                  <div className="mb-3">
+                    <Label htmlFor={"type"} className={"form-label"}>
+                      Selected customer (only if this copune generated for that
+                      customer only)
+                    </Label>
+                    <UsersDropDown
+                      users={users}
+                      onOptionsListSelected={onOptionsListSelected}
+                    />
+                  </div>
 
                   <div className="text-center mb-3">
                     <Button
@@ -302,14 +327,15 @@ const Coupones = (props) => {
                                 <th scope="col">Coupone expiry</th>
                                 <th scope="col">Percentage</th>
                                 <th scope="col">Fixed Amount</th>
+                                <th scope="col">Customer name</th>
                                 <th scope="col" colSpan="4">
                                   Actions
                                 </th>
                               </tr>
                             </thead>
                             <tbody>
-                              {!loading && coupones
-                                ? coupones.map((i, index) => (
+                              {!loading && couponesData
+                                ? couponesData.map((i, index) => (
                                     <tr key={index}>
                                       <th scope="row">#{i.id}</th>
 
@@ -341,6 +367,11 @@ const Coupones = (props) => {
                                         </span>
                                       </td>
                                       <td>
+                                        <span className="badge bg-success">
+                                          {i.user[0]?.FullName}
+                                        </span>
+                                      </td>
+                                      <td>
                                         <div
                                           style={{
                                             // display: "flex",
@@ -349,17 +380,6 @@ const Coupones = (props) => {
                                             width: 110,
                                           }}
                                         >
-                                          {/*  <Button
-                                            color="primary"
-                                            size="sm"
-                                            style={{ width: 50, height: 30 }}
-                                            onClick={() => {
-                                              handleOnEdit(i.userID);
-                                            }}
-                                          >
-                                            <i className="mdi mdi-pencil "></i>
-                                          </Button>*/}
-
                                           <Button
                                             color="danger"
                                             size="sm"

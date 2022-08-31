@@ -79,7 +79,7 @@ const NavbarUser = (props) => {
             >
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <Link className="nav-link" to="dashboard">
+                  <Link className="nav-link" to="dashboard-user">
                     <i className="ti-home me-2" />
                     {props.t("Dashboard")} {props.menuOpen}
                   </Link>

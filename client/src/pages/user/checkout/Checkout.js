@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { useProfile } from "hooks";
+import { useProfile, useQuery } from "hooks";
 import { GoSell } from "@tap-payments/gosell";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 const Checkout = () => {
   let history = useHistory();
+  let query = useQuery();
+
   const { userProfile } = useProfile();
   const handleResponseCallback = (res) => {
     if (res.status === "CAPTURED") {
@@ -22,6 +24,7 @@ const Checkout = () => {
             cus_unique_id: userProfile.userId,
             method: res.card.brand,
             cardLast4: res.card.last_four,
+            usedCoupon: query.get("code"),
           },
         },
       });

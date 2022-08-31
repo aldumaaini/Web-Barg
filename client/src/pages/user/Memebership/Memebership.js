@@ -12,18 +12,51 @@ import moment from "moment";
 import Breadcrumbs from "components/Common/Breadcrumb";
 import { useProfile, useRedux } from "hooks";
 import DeleteModal from "./DeleteModal";
-import { getMemeberShip, userMemeberShipSubscription } from "store/actions";
+import VoucherModal from "./VoucherModal";
+import {
+  getMemeberShip,
+  userMemeberShipSubscription,
+  userValidateCoupons,
+  getPricing,
+} from "store/actions";
 //css
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
 import Cards from "react-credit-cards";
 import "react-credit-cards/lib/styles.scss";
 const Memebership = (props) => {
   const history = useHistory();
   const [deleteModal, setDeleteModal] = useState(false);
+  const [CouponeCode, setCouponeCode] = useState(null);
+  const [DiscountAmount, setDiscountAmount] = useState(0);
+  const [TotalAmount, setTotalAmount] = useState(350);
+  const [VoucherModalOpen, setVoucherModalOpen] = useState(false);
   const [PaymentError, setPaymentError] = useState(null);
   const [PaymentKey, setPaymentKey] = useState(null);
   const [IsValiedToken, setIsValiedToken] = useState(false);
   const { userProfile } = useProfile();
   const { useAppSelector, dispatch } = useRedux();
+  const resolver = yupResolver(
+    yup.object().shape({
+      name: yup.string().required("Please Enter coupon name."),
+    })
+  );
+
+  const defaultValues = {};
+
+  const methods = useForm({ defaultValues, resolver });
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors },
+  } = methods;
+
+  const onSubmitForm = (values) => {
+    setCouponeCode(values.name);
+    dispatch(userValidateCoupons(values));
+  };
 
   const {
     error,
@@ -32,6 +65,14 @@ const Memebership = (props) => {
     subscriptionFail,
     subscriptionSuccess,
     loading,
+    errorC,
+
+    validationResultsuccess,
+    pricingSuccess,
+    pricingError,
+    price,
+    pricingMessage,
+    isPricingLoading,
   } = useAppSelector((state) => ({
     subscriptionSuccess: state.MemberShip.subscriptionSuccess,
     subscriptionFail: state.MemberShip.subscriptionFail,
@@ -39,6 +80,14 @@ const Memebership = (props) => {
     error: state.MemberShip.error,
     memebershipvalidation: state.MemberShip.memebershipvalidation,
     loading: state.MemberShip.loading,
+    errorC: state.Coupnes.error,
+    validationResultsuccess: state.Coupnes.validationResultsuccess,
+
+    pricingSuccess: state.Pricing.success,
+    pricingError: state.Pricing.error,
+    price: state.Pricing.price,
+    pricingMessage: state.Pricing.message,
+    isPricingLoading: state.Pricing.loading,
   }));
 
   useEffect(() => {
@@ -79,17 +128,44 @@ const Memebership = (props) => {
 
   useEffect(() => {
     dispatch(getMemeberShip());
-  }, []);
+    dispatch(getPricing());
+  }, [subscriptionSuccess]);
+
+  useEffect(() => {
+    if (validationResultsuccess) {
+      let Discount =
+        validationResultsuccess.type === "Fixed"
+          ? validationResultsuccess.fixedAmount
+          : (parseFloat(validationResultsuccess.percentage) / 100) * 350;
+      setDiscountAmount(Discount);
+      setTotalAmount(price - parseFloat(Discount));
+      setVoucherModalOpen(true);
+      GoSell.openLightBox();
+    }
+  }, [validationResultsuccess]);
 
   if (userProfile && userProfile.isPhoneVerified === 0) {
     return <Redirect to={{ pathname: "/phone-number-verification" }} />;
   }
 
   const handlePrepareForPayment = () => {
-    GoSell.openLightBox();
+    setDeleteModal(true);
+    //
   };
   const callbackFunc = (response) => {};
   const onPopupClosed = (response) => {};
+
+  const onConfirmClick = () => {
+    setDeleteModal(false);
+    setVoucherModalOpen(true);
+  };
+
+  const onCloseClicked = () => {
+    setDeleteModal(false);
+    GoSell.openLightBox();
+  };
+  if (loading || isPricingLoading) return <Loader />;
+
   const pricings = [
     {
       id: 2,
@@ -97,7 +173,7 @@ const Memebership = (props) => {
       description: "Premium plan with unlimited features",
       buttonTitle: "SUBSCRIBE",
       icon: "ion ion-ios-trophy",
-      price: "100",
+      price: `${price}`,
       duration: "Per month",
       link: "",
       features: [
@@ -107,17 +183,23 @@ const Memebership = (props) => {
       ],
     },
   ];
-
-  /**
-   * On delete event
-   */
-  if (loading === true) return <Loader />;
   return (
     <React.Fragment>
+      <VoucherModal
+        show={VoucherModalOpen}
+        onCloseClick={() => setVoucherModalOpen(false)}
+        register={register}
+        errors={errors}
+        control={control}
+        validationError={errorC}
+        handleSubmit={handleSubmit}
+        handleButtonClicked={onSubmitForm}
+      />
+
       <DeleteModal
         show={deleteModal}
-        //onDeleteClick={handleDeleteEvent}
-        onCloseClick={() => setDeleteModal(false)}
+        onConfirmClick={onConfirmClick}
+        onCloseClick={onCloseClicked}
       />
       <div className="page-content">
         <MetaTags>
@@ -296,7 +378,7 @@ const Memebership = (props) => {
                       <CardBody style={{ paddingTop: 30, paddingBottom: 50 }}>
                         <h4 className="card-title mb-4">Subscribe</h4>
                         <Container fluid>
-                          {IsValiedToken ? (
+                          {IsValiedToken && price !== 0 ? (
                             <Row>
                               {pricings.map((pricing, key) => (
                                 <CardPricing
@@ -371,7 +453,7 @@ const Memebership = (props) => {
               },
             }}
             order={{
-              amount: 375,
+              amount: TotalAmount,
               currency: "SAR",
               items: [
                 {
@@ -380,12 +462,13 @@ const Memebership = (props) => {
                   description:
                     "whatsapp barg premium subscription for one month",
                   quantity: "1",
-                  amount_per_unit: "375",
+                  amount_per_unit: `${price}`,
                   discount: {
                     type: "P",
-                    value: "0%",
+                    value: `${CouponeCode}:${DiscountAmount}`,
+                    code: CouponeCode,
                   },
-                  total_amount: "375.00",
+                  total_amount: `${price - parseFloat(DiscountAmount)} `,
                 },
               ],
               shipping: null,
@@ -401,7 +484,7 @@ const Memebership = (props) => {
                   email: true,
                   sms: false,
                 },
-                redirect: "http://localhost:3001/redirect",
+                redirect: `http://localhost:3001/redirect?code=${CouponeCode}`,
                 post: "http://localhost:3000/api/callbackTap",
               },
             }}

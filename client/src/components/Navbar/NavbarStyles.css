@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,100&family=Noto+Kufi+Arabic:wght@100;400;600;700&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,100&family=Noto+Kufi+Arabic:wght@100;400;600;700&display=swap");
 
 header {
   width: 100%;
@@ -8,8 +7,9 @@ header {
   position: sticky;
   top: 0;
   overflow: inherit;
-  font-family: 'Lato', sans-serif;
-  font-family: 'Noto Kufi Arabic', sans-serif;
+  font-family: "Lato", sans-serif;
+  font-family: "Noto Kufi Arabic", sans-serif;
+  z-index: 1;
   /* direction: rtl; */
 }
 

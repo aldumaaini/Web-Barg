@@ -2,15 +2,6 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 
 import { connect } from "react-redux";
-import {
-  Form,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  Input,
-  Button,
-} from "reactstrap";
 
 import { Link } from "react-router-dom";
 

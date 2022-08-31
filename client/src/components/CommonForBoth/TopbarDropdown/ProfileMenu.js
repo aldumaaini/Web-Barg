@@ -10,6 +10,7 @@ import {
 //i18n
 import { withTranslation } from "react-i18next";
 // Redux
+import { useProfile } from "hooks";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 
@@ -20,14 +21,7 @@ const ProfileMenu = (props) => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false);
 
-  const [username, setusername] = useState("Admin");
-
-  useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("authUser"));
-      setusername(obj.FullName);
-    }
-  }, [props.success]);
+  const { userProfile } = useProfile();
 
   return (
     <React.Fragment>
@@ -48,7 +42,12 @@ const ProfileMenu = (props) => {
           />
         </DropdownToggle>
         <DropdownMenu className="dropdown-menu-end">
-          <DropdownItem tag="a" href="/profile">
+          <DropdownItem
+            tag="a"
+            href={
+              userProfile.role === "admin" ? "/profile-admin" : "/profile-user"
+            }
+          >
             {" "}
             <i className="bx bx-user font-size-16 align-middle me-1" />
             {props.t("Profile")}{" "}

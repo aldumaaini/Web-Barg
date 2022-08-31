@@ -48,6 +48,13 @@ const postProfileVerifyPhone = (data) =>
 
 // get Users
 export const getUsers = () => get(url.GET_USERS);
+/* 
+ getPricing, updatePricing
+*/
+
+export const getPricing = () => get(url.GET_PRICING);
+
+export const updatePricing = (price) => put(url.UPDATE_PRICING, price);
 
 // add Users
 export const addNewUser = (user) => post(url.ADD_NEW_USER, user);
@@ -61,9 +68,13 @@ export const deleteUser = (id) => del(`${url.DELETE_USER}?id=${id}`);
 // get getCoupones
 export const getCoupones = () => get(url.GET_COUPONE);
 
+export const usersGetCoupones = () => get(url.USER_GET_COUPONE);
+
 // add addNewCoupone
 export const addNewCoupone = (coupone) => post(url.ADD_NEW_COUPONE, coupone);
 
+export const userPostCouponValidation = (name) =>
+  post(url.USER_VALIDATE_COUPONE, name);
 // delete deleteCoupone
 export const deleteCoupone = (id) => del(`${url.DELETE_COUPONE}?id=${id}`);
 

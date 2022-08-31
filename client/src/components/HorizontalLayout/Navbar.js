@@ -66,7 +66,7 @@ const Navbar = (props) => {
             >
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <Link className="nav-link" to="dashboard">
+                  <Link className="nav-link" to="dashboard-admin">
                     <i className="ti-home me-2" />
                     {props.t("Dashboard")} {props.menuOpen}
                   </Link>
@@ -82,13 +82,20 @@ const Navbar = (props) => {
                 <li className="nav-item">
                   <Link className="nav-link" to="/transactions-admin">
                     <i className="ti-money me-2" />
-                    {props.t("Transactions")} {props.menuOpen}
+                    {"Financial"} {props.menuOpen}
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/loyalty-admin">
                     <i className="ti-gift me-2" />
                     {props.t("Loaylty")} {props.menuOpen}
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link className="nav-link" to="/coupons-admin">
+                    <i className="ti-credit-card me-2" />
+                    {"Coupons"} {props.menuOpen}
                   </Link>
                 </li>
               </ul>

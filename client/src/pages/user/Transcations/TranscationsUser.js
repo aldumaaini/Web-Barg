@@ -107,7 +107,7 @@ const TranscationsUser = (props) => {
                             </tr>
                           </thead>
                           <tbody>
-                            {transactions.map((i) => (
+                            {transactions?.map((i) => (
                               <tr>
                                 <th scope="row">{i.transactions_id}</th>
 

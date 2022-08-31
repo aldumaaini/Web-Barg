@@ -12,6 +12,7 @@ import isAuthSaga from "./auth/userAuth/saga";
 import memberShipSaga from "./memberShip/saga";
 import TransactionsSaga from "./Transactions/saga";
 
+import pricingSaga from "./pricing/saga";
 export default function* rootSaga() {
   yield all([
     //public
@@ -25,5 +26,6 @@ export default function* rootSaga() {
     LayoutSaga(),
     fork(usersSaga),
     fork(couponesSaga),
+    fork(pricingSaga),
   ]);
 }

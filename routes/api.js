@@ -33,12 +33,9 @@ router.post("/register-new-account", async function (req, res) {
     "SELECT COUNT(*) AS PhoneCount FROM users WHERE phone=?",
     [phone],
     async function (err, results) {
-      if (err){
+      if (err) {
         res.status(500).send(ResponseHandler(500, null, null));
-        console.log(err); 
-      } 
-      
-      else {
+      } else {
         var phoneCount = results[0].PhoneCount;
         if (phoneCount === 1) {
           res
@@ -53,8 +50,7 @@ router.post("/register-new-account", async function (req, res) {
             async function (err, results) {
               if (err) {
                 res.status(500).send(ResponseHandler(500, null, null));
-                console.log(err); }
-              else {
+              } else {
                 var emailCount = results[0].EmailCount;
                 if (emailCount === 1) {
                   res
@@ -114,16 +110,36 @@ router.post("/register-new-account", async function (req, res) {
                                   function (err, results) {
                                     if (err) {
                                       res
-                                      .status(500)
-                                      .send(ResponseHandler(500, null, null));
-                                      console.log(err); 
-                                    }
-                                      
-                                    else {
+                                        .status(500)
+                                        .send(ResponseHandler(500, null, null));
+                                    } else {
                                       CON.query(
-                                        "INSERT INTO usersReferrals( userReferredToId,userRefferedFromCode)VALUES(?,?)",
+                                        "INSERT INTO usersReferrals(userReferredToId,userRefferedFromCode)VALUES(?,?)",
                                         [userId, referrer]
                                       );
+                                      if (
+                                        referrer !== "" ||
+                                        referrer !== "undefined" ||
+                                        referrer !== null
+                                      ) {
+                                        var dateInmonth = new moment()
+                                          .add(1, "month")
+                                          .format("YYYY-MM-DD HH:mm:ss");
+
+                                        CON.query(
+                                          "INSERT INTO Coupons( name,description,numOfUse, expire,type,percentage, fixedAmount,userId)VALUES(?,?,?,?,?,?,?,?)",
+                                          [
+                                            "NEWTOBARG",
+                                            "Joined by friend reward",
+                                            1,
+                                            dateInmonth,
+                                            "Fixed",
+                                            null,
+                                            20,
+                                            userId,
+                                          ]
+                                        );
+                                      }
                                       res
                                         .status(200)
                                         .send(
@@ -153,6 +169,94 @@ router.post("/register-new-account", async function (req, res) {
   );
 });
 
+router.get("/get-pricing", async function (req, res) {
+  CON.query("SELECT price FROM planPricing ", function (err, results) {
+    if (err) {
+      res.status(500).send(ResponseHandler(500, null, null));
+    } else {
+      let price = results[0].price;
+      res.status(200).send(ResponseHandler(200, price, "success"));
+    }
+  });
+});
+
+router.put("/update-pricing", verifyJWT, async function (req, res) {
+  const { price } = req.body;
+  let floatedPrice = parseFloat(price);
+  CON.query(
+    "UPDATE planPricing SET price=? ",
+    [floatedPrice],
+    function (err, results) {
+      if (err) {
+        res.status(500).send(ResponseHandler(500, null, null));
+      } else {
+        res.status(200).send(ResponseHandler(200, null, "price updated"));
+      }
+    }
+  );
+});
+
+router.post("/user-validate-coupon", verifyJWT, async function (req, res) {
+  CON.query(
+    "SELECT * FROM Coupons WHERE name=? AND  userId=?",
+    [req.body.name.name, req.user],
+    function (err, results) {
+      if (err) {
+        res.status(500).send(ResponseHandler(500, null, null));
+      } else {
+        if (results.length > 0) {
+          let expire = results[0].expire;
+          let id = results[0].id;
+          let type = results[0].type;
+          let fixedAmount = results[0].fixedAmount;
+          let percentage = results[0].percentage;
+          let status = results[0].status;
+          if (status === 1) {
+            let today = moment(new Date()).format("YYYY-MM-DD");
+            let planExDate = moment(expire).format("YYYY-MM-DD");
+            let isExpiryInthePast = moment(planExDate).isBefore(today);
+            if (isExpiryInthePast) {
+              res.status(401).send(ResponseHandler(401, "Expired", "Expired"));
+            } else {
+              let data = {
+                copuneid: id,
+                type,
+                fixedAmount,
+                percentage,
+              };
+              res.status(200).send(ResponseHandler(200, data, "successfull"));
+            }
+          } else {
+            res
+              .status(401)
+              .send(ResponseHandler(401, "Not valid", "Not valid"));
+          }
+        } else {
+          res
+            .status(404)
+            .send(ResponseHandler(404, "No coupon found", "No coupon found"));
+        }
+      }
+    }
+  );
+});
+
+router.get("/coupons-user", verifyJWT, async function (req, res) {
+  // const { id } = req.body;
+
+  CON.query(
+    "SELECT * FROM Coupons WHERE userId=?",
+    [req.user],
+    function (err, results) {
+      if (err) {
+        res.status(500).send(ResponseHandler(500, null, null));
+      } else {
+        res.status(200).send(ResponseHandler(200, results, "successfull"));
+      }
+    }
+  );
+});
+
 router.get("/coupons-admin", verifyJWT, async function (req, res) {
   // const { id } = req.body;
 
@@ -166,18 +270,33 @@ router.get("/coupons-admin", verifyJWT, async function (req, res) {
 
 //dd-new-coupons-admin
 router.post("/add-new-coupons-admin", verifyJWT, async function (req, res) {
-  const { name, description, numofuse, expire, type, percentage, fixedamount } =
-    req.body;
+  const {
+    name,
+    description,
+    numofuse,
+    expire,
+    type,
+    percentage,
+    fixedamount,
+    userId,
+  } = req.body;
 
   CON.query(
-    "INSERT INTO Coupons( name,description,numOfUse, expire,type,percentage, fixedAmount)VALUES(?,?,?,?,?,?,?)",
-    [name, description, numofuse, expire, type, percentage, fixedamount],
+    "INSERT INTO Coupons( name,description,numOfUse, expire,type,percentage, fixedAmount, userId)VALUES(?,?,?,?,?,?,?,?)",
+    [
+      name,
+      description,
+      numofuse,
+      expire,
+      type,
+      percentage,
+      fixedamount,
+      userId,
+    ],
     function (err, results) {
-      if (err){
+      if (err) {
         res.status(500).send(ResponseHandler(500, null, null));
-        console.log(err)
-      } 
-      else {
+      } else {
         if (results.affectedRows > 0) {
           let data = {
             description: description,
@@ -188,6 +307,7 @@ router.post("/add-new-coupons-admin", verifyJWT, async function (req, res) {
             numOfUse: numofuse,
             percentage: percentage,
             type: type,
+            userId: userId,
           };
           res.status(200).send(ResponseHandler(200, data, "successfull"));
         }
@@ -379,9 +499,7 @@ router.delete("/delete-user-admin", verifyJWT, async function (req, res) {
   });
 });
 
-router.post("/callbackTap", function (req, res) {
-  console.log("callback taps req post: ", req);
-});
+router.post("/callbackTap", function (req, res) {});
 
 router.get("/fetch-user-transactions", verifyJWT, function (req, res) {
   let id = req.user;
@@ -423,6 +541,7 @@ router.post("/user-membership-subscription", verifyJWT, function (req, res) {
     cus_unique_id,
     method,
     cardLast4,
+    usedCoupon,
   } = req.body;
   CON.query(
     "INSERT INTO transactions (transactions_id,status,amount,currency,receipt_id,cus_id,cus_email,cus_unique_id ,method,cardLast4) VALUES (?,?,?,?,?,?,?,?,?,?)",
@@ -454,6 +573,11 @@ router.post("/user-membership-subscription", verifyJWT, function (req, res) {
               if (err) {
                 return res.status(500).send(ResponseHandler(500, null, null));
               } else {
+                CON.query("DELETE FROM Coupons WHERE name=? AND userId=?", [
+                  usedCoupon,
+                  cus_unique_id,
+                ]);
+
                 return res
                   .status(200)
                   .send(ResponseHandler(200, "ok", "successfull"));
