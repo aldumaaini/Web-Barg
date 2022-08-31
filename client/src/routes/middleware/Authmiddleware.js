@@ -7,6 +7,7 @@ const Authmiddleware = ({
   component: Component,
   layout: Layout,
   isAuthProtected,
+  role,
   ...rest
 }) => {
   let { userProfile } = useProfile();
@@ -82,7 +83,11 @@ const Authmiddleware = ({
 
         return (
           <Layout>
-            <Component {...props} />
+            {isAuthProtected && userProfile.role === role ? (
+              <Component {...props} />
+            ) : !isAuthProtected ? (
+              <Component {...props} />
+            ) : null}
           </Layout>
         );
       }}

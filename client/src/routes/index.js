@@ -7,7 +7,11 @@ import HorizontalLayout from "components/HorizontalLayout";
 import NonAuthLayout from "components/NonAuthLayout";
 //import { AuthProtected, AccessRoute } from "./middleware/Authmiddleware";
 import Authmiddleware from "./middleware/Authmiddleware";
-import { publicRoutes, privateRoutes } from "./allRoutes";
+import {
+  publicRoutes,
+  adminPrivateRoutes,
+  userPrivateRoutes,
+} from "./allRoutes";
 
 const Index = (props) => {
   const Layout = useSelector((state) => ({
@@ -44,12 +48,24 @@ const Index = (props) => {
             />
           ))}
 
-          {privateRoutes.map((route, idx) => (
+          {adminPrivateRoutes.map((route, idx) => (
             <Authmiddleware
               path={route.path}
               layout={DashBoardLayoutt}
               component={route.component}
               key={idx}
+              role="admin"
+              isAuthProtected={true}
+              exact
+            />
+          ))}
+          {userPrivateRoutes.map((route, idx) => (
+            <Authmiddleware
+              path={route.path}
+              layout={DashBoardLayoutt}
+              component={route.component}
+              key={idx}
+              role="user"
               isAuthProtected={true}
               exact
             />

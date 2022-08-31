@@ -1,11 +1,14 @@
 //REGISTER
 export const POST_REGISTER = "/register-new-account";
 export const MEMBERSHIP_VALIDATION = "/UserPlanValidation";
-
+export const USER_VALIDATE_COUPONE = "/user-validate-coupon";
 export const GET_USER_TRANSACTIONS = "/fetch-user-transactions";
 //GET_ADMIN_TRANSACTIONS
 export const GET_ADMIN_TRANSACTIONS = "/fetch-admin-transactions";
 //LOGIN
+
+export const UPDATE_PRICING = "/update-pricing";
+export const GET_PRICING = "/get-pricing";
 export const USER_MEMBERSHIP_SUBSCRIPTION = "/user-membership-subscription";
 export const POST_LOGIN = "/login";
 export const GET_AUTHENTICATE_USER = "/isValidUser";
@@ -24,6 +27,7 @@ export const DELETE_USER = "/delete-user-admin";
 
 // COUPONES
 export const GET_COUPONE = "/coupons-admin";
+export const USER_GET_COUPONE = "/coupons-user";
 export const ADD_NEW_COUPONE = "/add-new-coupons-admin";
 export const DELETE_COUPONE = "/delete-coupons-admin";
 

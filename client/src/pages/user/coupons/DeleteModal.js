@@ -1,8 +1,8 @@
-import PropTypes from "prop-types";
-import React from "react";
-import { Col, Modal, ModalBody, Row } from "reactstrap";
+import PropTypes from 'prop-types'
+import React from "react"
+import { Col, Modal, ModalBody, Row } from "reactstrap"
 
-const DeleteModal = ({ show, onConfirmClick, onCloseClick }) => {
+const DeleteModal = ({ show, onDeleteClick, onCloseClick }) => {
   return (
     <Modal isOpen={show} toggle={onCloseClick} centered={true}>
       <ModalBody className="py-3 px-5">
@@ -13,7 +13,8 @@ const DeleteModal = ({ show, onConfirmClick, onCloseClick }) => {
                 className="mdi mdi-alert-circle-outline"
                 style={{ fontSize: "9em", color: "orange" }}
               />
-              <h2>Do you have voucher?</h2>
+              <h2>Are you sure?</h2>
+              <h4>{"You won't be able to revert this!"}</h4>
             </div>
           </Col>
         </Row>
@@ -23,29 +24,29 @@ const DeleteModal = ({ show, onConfirmClick, onCloseClick }) => {
               <button
                 type="button"
                 className="btn btn-success btn-lg ms-2"
-                onClick={onConfirmClick}
+                onClick={onDeleteClick}
               >
-                Yes
+                Yes, delete it!
               </button>
               <button
                 type="button"
                 className="btn btn-danger btn-lg ms-2"
                 onClick={onCloseClick}
               >
-                No
+                Cancel
               </button>
             </div>
           </Col>
         </Row>
       </ModalBody>
     </Modal>
-  );
-};
+  )
+}
 
 DeleteModal.propTypes = {
   onCloseClick: PropTypes.func,
   onDeleteClick: PropTypes.func,
-  show: PropTypes.any,
-};
+  show: PropTypes.any
+}
 
-export default DeleteModal;
+export default DeleteModal

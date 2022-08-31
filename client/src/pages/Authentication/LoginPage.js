@@ -25,7 +25,7 @@ import Navbar from "../../components/Navbar/Navbar";
 
 const LoginPage = (props) => {
   const { dispatch, useAppSelector } = useRedux();
-  const [t, i18n]= useTranslation();
+  const [t, i18n] = useTranslation();
 
   const { user, isUserLogin, error, loginLoading } = useAppSelector(
     (state) => ({
@@ -41,18 +41,15 @@ const LoginPage = (props) => {
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const resolver = yupResolver(
     yup.object().shape({
-
       mobile: yup
         .string()
         .matches(phoneRegExp, "Phone number is not valid")
-        .required(t ('Please Enter Password')),
-      password: yup.string().required(t ('Please Enter Mobile Number')),
-
+        .required(t("Please Enter Password")),
+      password: yup.string().required(t("Please Enter Mobile Number")),
     })
   );
 
   const defaultValues = {
-
     mobile: "",
     password: "",
   };
@@ -73,7 +70,8 @@ const LoginPage = (props) => {
     return (
       <Redirect
         to={{
-          pathname: "dashboard",
+          pathname:
+            userProfile.role === "admin" ? "dashboard-admin" : "dashboard-user",
         }}
       />
     );
@@ -81,21 +79,23 @@ const LoginPage = (props) => {
 
   useEffect(() => {
     if (isUserLogin && !loginLoading) {
-      history.push("/dashboard");
+      if (user.role === "admin") {
+        history.push("/dashboard-admin");
+      } else {
+        history.push("/dashboard-user");
+      }
     }
   }, [isUserLogin, history, loginLoading]);
 
   return (
-   
-
     <NonAuthLayoutWrapper>
       <Navbar />
       <Row className=" justify-content-center my-auto">
         <Col sm={8} lg={6} xl={5} className="col-xxl-4">
           <div className="py-md-5 py-4">
             <AuthHeader
-              title= {t ('Welcome Back!')}
-              subtitle={t ('Sign in to continue to Whatsapp Barg')}
+              title={t("Welcome Back!")}
+              subtitle={t("Sign in to continue to Whatsapp Barg")}
             />
 
             {error !== "" && <Alert color="danger">{error}</Alert>}
@@ -107,25 +107,21 @@ const LoginPage = (props) => {
               {loginLoading && <Loader />}
               <div className="mb-3">
                 <FormInput
- 
-                  label={t ("Phone Number")}
+                  label={t("Phone Number")}
                   type="text"
                   name="mobile"
- 
                   register={register}
                   errors={errors}
                   control={control}
                   labelClassName="form-label"
- 
-                  placeholder={t ("Enter Your Mobile:966509336310")}
- 
+                  placeholder={t("Enter Your Mobile:966509336310")}
                   className="form-control"
                 />
               </div>
 
               <div className="mb-3">
                 <FormInput
-                  label={t ("Password")}
+                  label={t("Password")}
                   type="password"
                   name="password"
                   register={register}
@@ -133,7 +129,7 @@ const LoginPage = (props) => {
                   control={control}
                   labelClassName="form-label"
                   className="form-control pe-5"
-                  placeholder={t ("Enter Password")} 
+                  placeholder={t("Enter Password")}
                 />
               </div>
 
@@ -157,22 +153,25 @@ const LoginPage = (props) => {
                   className="w-100 btnLogin"
                   type="submit"
                 >
-                 {t ('Login')} 
+                  {t("Login")}
                 </Button>
               </div>
             </Form>
 
             <div className="mt-5 text-center text-muted">
-              <p> <b> 
-              {t ("You don't have an account?")} {" "}
-                <Link
-                  to="/register"
-                  className="fw-medium text-decoration-underline"
-                >
-                  {" "}
-                  {t ('Register')}
-                </Link>
-                </b> </p>
+              <p>
+                {" "}
+                <b>
+                  {t("You don't have an account?")}{" "}
+                  <Link
+                    to="/register"
+                    className="fw-medium text-decoration-underline"
+                  >
+                    {" "}
+                    {t("Register")}
+                  </Link>
+                </b>{" "}
+              </p>
             </div>
           </div>
         </Col>

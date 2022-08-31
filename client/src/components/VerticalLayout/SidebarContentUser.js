@@ -94,7 +94,7 @@ const SidebarContentUser = (props) => {
           <ul className="metismenu list-unstyled" id="side-menu">
             <li className="menu-title">{props.t("Main")} </li>
             <li>
-              <Link to="/dashboard" className="waves-effect">
+              <Link to="/dashboard-user" className="waves-effect">
                 <i className="ti-home"></i>
 
                 <span>{props.t("Dashboard")}</span>
@@ -113,7 +113,12 @@ const SidebarContentUser = (props) => {
                 <span>{props.t("Transactions")}</span>
               </Link>
             </li>
-
+            <li>
+              <Link to="/coupons-user" className=" waves-effect">
+                <i className="ti-credit-card"></i>
+                <span>{"Coupons"}</span>
+              </Link>
+            </li>
             {/* <li>
               <Link to="/#" className="has-arrow waves-effect">
                 <i className="ti-package"></i>

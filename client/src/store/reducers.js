@@ -15,7 +15,7 @@ import Transactions from "./Transactions/reducer";
 import Users from "./users/reducer";
 
 import Coupnes from "./coupons/reducer";
-
+import Pricing from "./pricing/reducer";
 const rootReducer = combineReducers({
   // public
   Layout,
@@ -28,6 +28,7 @@ const rootReducer = combineReducers({
   Coupnes,
   MemberShip,
   Transactions,
+  Pricing,
 });
 
 export default rootReducer;

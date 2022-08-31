@@ -2,12 +2,11 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, CardBody, Col, Container } from "reactstrap";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const CardPricing = (props) => {
   const { t } = useTranslation();
   return (
-  
     <React.Fragment>
       <Col xl="6" md="6">
         <Card className="pricing-box">
@@ -38,23 +37,24 @@ const CardPricing = (props) => {
                 </span>
               </h1>
             </div>
-            <div className="d-grid mt-5">
-              <Button
-                onClick={props.onSubscribePress}
-                className="btn btn-primary btn-block waves-effect waves-light"
-                style={{
-                  backgroundColor: "rgb(13, 193, 67)",
-                  borderColor: "rgb(13, 193, 67)",
-                }}
-              >
-                {props.pricing.buttonTitle}
-              </Button>
-            </div>
+            {props.hasButton === false ? null : (
+              <div className="d-grid mt-5">
+                <Button
+                  onClick={props.onSubscribePress}
+                  className="btn btn-primary btn-block waves-effect waves-light"
+                  style={{
+                    backgroundColor: "rgb(13, 193, 67)",
+                    borderColor: "rgb(13, 193, 67)",
+                  }}
+                >
+                  {props.pricing.buttonTitle}
+                </Button>
+              </div>
+            )}
           </CardBody>
         </Card>
       </Col>
     </React.Fragment>
- 
   );
 };
 
